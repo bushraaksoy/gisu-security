@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  SECURITY
+  PARENT
+}
+
+enum GateLogType {
+  DROPOFF
+  PICKUP
+}
+
+enum GateLogStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Transport {
+  CAR
+  BUS
+  FOOT
+  BODA
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  username     String    @unique
+  email        String?   @unique
+  passwordHash String
+  role         Role
+  guardianId   String?   @unique
+  students     Student[]
+  gateLogs     GateLog[] @relation("GateLogParent")
+  reviewedLogs GateLog[] @relation("GateLogReviewer")
+  grantedPermissions  GatePermission[] @relation("PermissionGranter")
+  receivedPermissions GatePermission[] @relation("PermissionGrantee")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model GatePermission {
+  id           String   @id @default(cuid())
+  sisStudentId String
+  grantedById  String
+  grantedBy    User     @relation("PermissionGranter", fields: [grantedById], references: [id], onDelete: Cascade)
+  granteeId    String
+  grantee      User     @relation("PermissionGrantee", fields: [granteeId], references: [id], onDelete: Cascade)
+  canDropoff   Boolean  @default(false)
+  canPickup    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([sisStudentId, granteeId])
+  @@index([granteeId])
+  @@index([grantedById])
+}
+
+model Student {
+  id        String    @id @default(cuid())
+  givenName String
+  surname   String
+  parents   User[]
+  gateLogs  GateLog[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model GateLog {
+  id           String        @id @default(cuid())
+  type         GateLogType
+  status       GateLogStatus @default(PENDING)
+  occurredAt   DateTime      @default(now())
+  studentId    String?
+  student      Student?      @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  sisStudentId String?
+  studentName  String
+  classLabel   String?
+  visitId      String?
+  transport    Transport?
+  alone        Boolean   @default(false)
+  escortName   String?
+  parentId     String?
+  parent       User?         @relation("GateLogParent", fields: [parentId], references: [id], onDelete: Restrict)
+  dropoffId    String?
+  dropoff      GateLog?      @relation("PickupOf", fields: [dropoffId], references: [id], onDelete: Restrict)
+  pickups      GateLog[]     @relation("PickupOf")
+  reviewedById String?
+  reviewedBy   User?         @relation("GateLogReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt   DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([visitId])
+}

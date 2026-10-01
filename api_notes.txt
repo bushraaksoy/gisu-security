@@ -1,0 +1,60 @@
+The Security **server** should use this one endpoint. It returns students, guardians, and the links together.
+
+**`GET /api/internal/directory`**
+
+- Auth: `Authorization: Bearer <SIS_INTERNAL_TOKEN>` (the service token, **not** a staff login JWT)
+- By default only from **localhost** (`127.0.0.1`). On the droplet: `http://127.0.0.1:4000/api/internal/directory`
+- Optional `?q=` to search names/numbers (for a cache miss)
+
+No-query response:
+
+```json
+{
+  "students": [
+    {
+      "id": "...",
+      "studentNumber": "...",
+      "givenName": "...",
+      "middleName": "...",
+      "surname": "...",
+      "status": "ACTIVE",
+      "yearGroup": "Year 2",
+      "classLabel": "Year 2B"
+    }
+  ],
+  "guardians": [
+    {
+      "id": "...",
+      "givenName": "...",
+      "surname": "...",
+      "phone": "...",
+      "email": "..."
+    }
+  ],
+  "links": [
+    {
+      "studentId": "...",
+      "guardianId": "...",
+      "relation": "FATHER"
+    }
+  ]
+}
+```
+
+`relation` is `FATHER` | `MOTHER` | `OTHER`. Full snapshot is ACTIVE students + all guardians + links for those active students. `?q=` also expands to related people.
+
+The Security **browser** should not call this. Only the Security API, with `SIS_INTERNAL_TOKEN` from env.
+
+---
+
+There are also staff CRUD routes. **Do not use these from Security** — they need an admin JWT and can read/write transcripts and report cards:
+
+| Method | Path | What you get |
+|---|---|---|
+| `GET` | `/api/students` | Full student rows (`?q=`, `?status=`, etc.) |
+| `GET` | `/api/students/:id` | Student plus guardians, enrollments, **report cards** |
+| `GET` | `/api/guardians` | Guardian list |
+| `GET` | `/api/guardians/:id` | Guardian plus linked students |
+| `GET` | `/api/student-guardians` | Links (`?studentId=`, `?guardianId=`, `?relation=`) |
+
+Those sit behind `requireAuth` after login at `POST /api/auth/login`.
