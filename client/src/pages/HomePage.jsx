@@ -92,11 +92,9 @@ export function HomePage() {
       <div
         className="flex items-center gap-2 py-1"
       >
-        <span
-          className={`w-1.5 self-stretch rounded-full shadow-[3px_0_6px_-1px_rgb(0_0_0/0.18)] ${greeting.bar}`}
-        />
+        <span className={`w-1.5 self-stretch rounded-full ${greeting.bar}`} />
         <GreetingIcon className={`size-4 shrink-0 ${greeting.iconColor}`} />
-        <span className="min-w-0 leading-tight">
+        <span className="inline-block min-w-0 leading-tight shadow-[4px_0_8px_-2px_rgb(0_0_0/0.22)]">
           <span className="block text-sm font-semibold">{dayGreeting()}</span>
           <span className="block text-[11px] text-muted-foreground">
             Hope you're having a great day!
