@@ -5,7 +5,9 @@ import { Toaster } from "sonner"
 import "./index.css"
 import { ThemeProvider } from "@/components"
 import { queryClient } from "@/lib/queryClient"
+import { startSchoolClock } from "@/lib/schoolClock"
 import App from "./App.jsx"
+startSchoolClock()
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

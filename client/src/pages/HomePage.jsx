@@ -8,6 +8,7 @@ import { errorMessage } from "@/lib/errors"
 import { gateStates, StatusBadge } from "@/lib/gateStatus"
 import { queryKeys } from "@/lib/queryClient"
 import { dayGreeting, dayPart } from "@/lib/schoolDay"
+import { useNow } from "@/lib/schoolClock"
 const greetingMarks = {
   morning: {
     icon: Sun,
@@ -36,7 +37,8 @@ export function HomePage() {
     staleTime: 0,
   })
   const children = (todayQuery.data?.children ?? []).filter(showsOnToday)
-  const greeting = greetingMarks[dayPart()]
+  const now = useNow()
+  const greeting = greetingMarks[dayPart(now)]
   const GreetingIcon = greeting.icon
   const previous = useRef(null)
   const timers = useRef([])
@@ -88,14 +90,14 @@ export function HomePage() {
     previous.current = new Map(next.map((child) => [child.id, child.state]))
   }, [todayQuery.data])
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 md:mx-0">
       <div
         className="flex items-center gap-2 py-1"
       >
         <span className={`w-1.5 self-stretch rounded-full ${greeting.bar}`} />
         <GreetingIcon className={`size-4 shrink-0 ${greeting.iconColor}`} />
         <span className="min-w-0 leading-tight">
-          <span className="block text-sm font-semibold">{dayGreeting()}</span>
+          <span className="block text-sm font-semibold">{dayGreeting(now)}</span>
           <span className="block text-[11px] text-muted-foreground">
             Hope you're having a great day!
           </span>

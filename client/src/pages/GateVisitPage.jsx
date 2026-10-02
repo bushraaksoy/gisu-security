@@ -87,7 +87,7 @@ export function GateVisitPage({ mode }) {
         ? "No one is at school yet."
         : "Everyone is already at the gate today."
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-lg flex-col gap-4 md:mx-0">
       {todayQuery.isPending ? (
         <p className="text-sm text-muted-foreground">Loading students…</p>
       ) : todayQuery.error ? (
