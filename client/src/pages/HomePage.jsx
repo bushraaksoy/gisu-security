@@ -11,17 +11,17 @@ import { dayGreeting, dayPart } from "@/lib/schoolDay"
 const greetingMarks = {
   morning: {
     icon: Sun,
-    card: "bg-[#f6c9a4]",
+    bar: "bg-[#e8b48a]",
     iconColor: "text-[#8c4314]",
   },
   afternoon: {
     icon: Sun,
-    card: "bg-[#f8e7a0]",
+    bar: "bg-[#e8cf70]",
     iconColor: "text-[#8a6414]",
   },
   evening: {
     icon: Moon,
-    card: "bg-[#d7e6f8]",
+    bar: "bg-[#b9d0f0]",
     iconColor: "text-[#3d6494]",
   },
 }
@@ -90,8 +90,11 @@ export function HomePage() {
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col gap-6">
       <div
-        className={`flex items-center gap-2 rounded-2xl px-3 py-2 ${greeting.card}`}
+        className="flex items-center gap-2 py-1"
       >
+        <span
+          className={`w-1.5 self-stretch rounded-full shadow-[3px_0_6px_-1px_rgb(0_0_0/0.18)] ${greeting.bar}`}
+        />
         <GreetingIcon className={`size-4 shrink-0 ${greeting.iconColor}`} />
         <span className="min-w-0 leading-tight">
           <span className="block text-sm font-semibold">{dayGreeting()}</span>
