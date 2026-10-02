@@ -112,7 +112,7 @@ export function HomePage() {
           <span className="min-w-0 flex-1">
             <span className="block font-semibold">Drop off</span>
             <span className="mt-0.5 block text-sm text-muted-foreground">
-              Bring them to school
+              Arriving at school
             </span>
           </span>
           <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
@@ -127,7 +127,7 @@ export function HomePage() {
           <span className="min-w-0 flex-1">
             <span className="block font-semibold">Pick up</span>
             <span className="mt-0.5 block text-sm text-muted-foreground">
-              Take them home
+              Leaving school
             </span>
           </span>
           <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
