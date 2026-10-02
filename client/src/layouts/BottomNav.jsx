@@ -26,13 +26,13 @@ export function BottomNav() {
           >
             {({ isActive }) => (
               <>
-                <span className="flex h-16 flex-col items-center justify-center gap-1">
+                <span className="flex flex-col items-center gap-1 pt-2">
                   <span className="flex size-8 items-center justify-center rounded-full">
                     <tab.icon className="size-5" />
                   </span>
                   {tab.label}
                 </span>
-                <span className="inline-grid h-[calc(1.5rem+env(safe-area-inset-bottom))] items-end overflow-hidden">
+                <span className="inline-grid h-[calc(1rem+env(safe-area-inset-bottom))] items-end overflow-hidden">
                   <span className="invisible col-start-1 row-start-1">
                     {tab.label}
                   </span>
