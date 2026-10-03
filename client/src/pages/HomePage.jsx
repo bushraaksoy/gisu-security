@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Check, ChevronRight, LogIn, LogOut, Moon, Sun } from "lucide-react"
+import { Check, ChevronRight, LogIn, LogOut } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
@@ -11,19 +11,17 @@ import { dayGreeting, dayPart } from "@/lib/schoolDay"
 import { useNow } from "@/lib/schoolClock"
 const greetingMarks = {
   morning: {
-    icon: Sun,
+    emoji: "☀️",
     bar: "bg-[#e8b48a]",
-    iconColor: "text-[#8c4314]",
   },
   afternoon: {
-    icon: Sun,
+    emoji: "🌤️",
     bar: "bg-[#e8cf70]",
-    iconColor: "text-[#8a6414]",
   },
   evening: {
-    icon: Moon,
+    emoji: "🌙",
     bar: "bg-[#b9d0f0]",
-    iconColor: "text-[#3d6494]",
+    note: "Hope you're having a great evening!",
   },
 }
 function showsOnToday(child) {
@@ -39,7 +37,6 @@ export function HomePage() {
   const children = (todayQuery.data?.children ?? []).filter(showsOnToday)
   const now = useNow()
   const greeting = greetingMarks[dayPart(now)]
-  const GreetingIcon = greeting.icon
   const previous = useRef(null)
   const timers = useRef([])
   const [celebrating, setCelebrating] = useState(() => new Set())
@@ -95,11 +92,15 @@ export function HomePage() {
         className="flex items-center gap-2 py-1"
       >
         <span className={`w-1.5 self-stretch rounded-full ${greeting.bar}`} />
-        <GreetingIcon className={`size-4 shrink-0 ${greeting.iconColor}`} />
+        <span className="text-[18px] leading-none" aria-hidden>
+          {greeting.emoji}
+        </span>
         <span className="min-w-0 leading-tight">
-          <span className="block text-sm font-semibold">{dayGreeting(now)}</span>
+          <span className="block text-sm font-semibold">
+            {dayGreeting(now)}
+          </span>
           <span className="block text-[11px] text-muted-foreground">
-            Hope you're having a great day!
+            {greeting.note ?? "Hope you're having a great day!"}
           </span>
         </span>
       </div>

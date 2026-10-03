@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { createPortal } from "react-dom"
 import { toast } from "sonner"
 import { DataTable, RecordCard, RecordCards } from "@/components/data-table"
 import { PasswordInput } from "@/components/password-input"
@@ -71,6 +72,10 @@ export function UsersPage() {
   const [open, setOpen] = useState(false)
   const [formError, setFormError] = useState("")
   const [userQuery, setUserQuery] = useState("")
+  const [headerSlot, setHeaderSlot] = useState(null)
+  useEffect(() => {
+    setHeaderSlot(document.getElementById("header-action"))
+  }, [])
   const visibleUsers = useMemo(
     () =>
       users.filter((user) =>
@@ -170,23 +175,26 @@ export function UsersPage() {
   }
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <Input
-          value={userQuery}
-          onChange={(event) => setUserQuery(event.target.value)}
-          placeholder="Search users"
-          aria-label="Search users"
-          className="h-9 min-w-0 flex-1 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
-        />
-        <Button
-          size="icon"
-          className="size-9 shrink-0 rounded-full"
-          aria-label="New user"
-          onClick={openCreate}
-        >
-          <Plus className="size-5" />
-        </Button>
-      </div>
+      {headerSlot
+        ? createPortal(
+            <Button
+              size="icon"
+              className="size-9 shrink-0 rounded-full"
+              aria-label="New user"
+              onClick={openCreate}
+            >
+              <Plus className="size-5" />
+            </Button>,
+            headerSlot
+          )
+        : null}
+      <Input
+        value={userQuery}
+        onChange={(event) => setUserQuery(event.target.value)}
+        placeholder="Search users"
+        aria-label="Search users"
+        className="h-9 min-w-0 flex-1 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
+      />
 
       {pageError && !open ? (
         <p className="text-sm text-destructive">{errorMessage(pageError)}</p>

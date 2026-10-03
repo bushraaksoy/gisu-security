@@ -1,6 +1,6 @@
 import { ChevronLeft } from "lucide-react"
 import { useLocation, useMatch, useNavigate } from "react-router-dom"
-import logo from "@/assets/galaxy_logo.png"
+import mark from "@/assets/galaxy_logo_only.png"
 import { useAuth } from "@/lib/auth"
 export function TopBar() {
   const navigate = useNavigate()
@@ -38,21 +38,24 @@ export function TopBar() {
           </button>
         ) : null}
         {title ? (
-          <h1
-            className={
-              isAssign
-                ? "min-w-0 text-lg font-bold leading-tight"
-                : "truncate text-2xl font-bold"
-            }
-          >
-            {title}
-          </h1>
+          <div className="flex min-w-0 items-center gap-2">
+            <img
+              src={mark}
+              alt=""
+              className="size-8 shrink-0 object-contain"
+            />
+            <h1
+              className={
+                isAssign
+                  ? "min-w-0 text-lg font-bold leading-tight"
+                  : "truncate text-2xl font-bold"
+              }
+            >
+              {title}
+            </h1>
+          </div>
         ) : null}
-        <img
-          src={logo}
-          alt="Galaxy International School Uganda"
-          className="ml-auto h-9 w-auto shrink-0 md:hidden"
-        />
+        <div id="header-action" className="ml-auto shrink-0" />
       </div>
     </header>
   )
