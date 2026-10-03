@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "db:generate": "prisma generate && node scripts/strip-generated.js",
+    "db:generate": "rm -rf src/generated/prisma && prisma generate && node scripts/strip-generated.js",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "postinstall": "prisma generate && node scripts/strip-generated.js"
+    "postinstall": "rm -rf src/generated/prisma && prisma generate && node scripts/strip-generated.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

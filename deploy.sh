@@ -7,8 +7,8 @@ cd "$ROOT"
 git pull
 
 cd "$ROOT/server"
+rm -rf src/generated/prisma
 NODE_ENV=development npm ci --include=dev
-npx --no-install prisma generate
 npx --no-install prisma migrate deploy
 
 cd "$ROOT/client"
