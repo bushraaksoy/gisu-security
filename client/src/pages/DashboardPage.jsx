@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import { School } from "lucide-react"
+import { ChevronRight, School } from "lucide-react"
+import { Link } from "react-router-dom"
 import { getPresent } from "@/api/gate"
 import { errorMessage } from "@/lib/errors"
 import { queryKeys } from "@/lib/queryClient"
@@ -21,7 +22,11 @@ export function DashboardPage() {
     return null
   }
   return (
-    <article className="max-w-sm rounded-2xl bg-emerald-50 px-6 py-8">
+    <Link
+      to="/in-school"
+      className="relative block max-w-sm rounded-2xl bg-emerald-50 px-6 py-8"
+    >
+      <ChevronRight className="absolute top-6 right-5 size-5 text-emerald-800" />
       <span className="flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800">
         <School className="size-6" />
       </span>
@@ -29,6 +34,6 @@ export function DashboardPage() {
         {presentQuery.data.count}
       </p>
       <p className="text-sm text-emerald-800">in school</p>
-    </article>
+    </Link>
   )
 }

@@ -20,6 +20,12 @@ export const primaryTabs = [
   },
   { to: "/users", label: "Users", icon: Users, roles: ["SUPERADMIN", "ADMIN"] },
   {
+    to: "/in-school",
+    label: "Students",
+    icon: GraduationCap,
+    roles: ["ADMIN"],
+  },
+  {
     to: "/students",
     label: "Students",
     icon: GraduationCap,

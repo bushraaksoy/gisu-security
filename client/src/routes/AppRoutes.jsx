@@ -8,6 +8,7 @@ import {
   GateVisitPage,
   GuardianDetailPage,
   HomePage,
+  InSchoolPage,
   GuardiansPage,
   LoginPage,
   LogsPage,
@@ -72,6 +73,14 @@ export function AppRoutes() {
                 element={
                   <RequireRole roles={["SUPERADMIN", "ADMIN"]}>
                     <UsersPage />
+                  </RequireRole>
+                }
+              />
+              <Route
+                path="in-school"
+                element={
+                  <RequireRole roles={["SUPERADMIN", "ADMIN"]}>
+                    <InSchoolPage />
                   </RequireRole>
                 }
               />

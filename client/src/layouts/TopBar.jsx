@@ -11,6 +11,7 @@ export function TopBar() {
   const isGate = pathname === "/dropoff" || pathname === "/pickup"
   const isRecord = pathname === "/log-dropoff" || pathname === "/log-pickup"
   const isAssign = pathname.startsWith("/profile/assign")
+  const isInSchool = pathname === "/in-school"
   const isDetail = Boolean(studentMatch || guardianMatch)
   const title = isDetail ? null : pageTitle(pathname, user?.role)
   const backTo = studentMatch
@@ -23,7 +24,9 @@ export function TopBar() {
           ? "/logs"
           : isAssign
             ? "/profile"
-            : null
+            : isInSchool && user?.role === "SUPERADMIN"
+              ? "/dashboard"
+              : null
   return (
     <header className="sticky top-0 z-30 shrink-0 px-4 pt-[env(safe-area-inset-top)]">
       <div className="flex min-w-0 items-center gap-1 pt-8 pb-4">
@@ -72,6 +75,9 @@ function pageTitle(pathname, role) {
   }
   if (pathname.startsWith("/dashboard")) {
     return "Dashboard"
+  }
+  if (pathname.startsWith("/in-school")) {
+    return role === "ADMIN" ? "Students" : "In school"
   }
   if (pathname.startsWith("/profile/assign")) {
     return "Assign pickup/dropoff person"
