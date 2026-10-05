@@ -25,7 +25,7 @@ export function LoginPage() {
     signIn.mutate()
   }
   return (
-    <div className="flex h-full justify-center overflow-y-auto overscroll-none bg-[oklch(0.97_0_0)] px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-8 md:items-center md:pt-8">
+    <div className="flex min-h-dvh justify-center bg-[oklch(0.97_0_0)] px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-8 md:items-center md:pt-8">
       <form
         onSubmit={onSubmit}
         className="flex w-full max-w-sm flex-col md:rounded-2xl md:bg-background md:px-8 md:py-10"

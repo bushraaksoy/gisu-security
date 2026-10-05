@@ -5,10 +5,8 @@ import { Toaster } from "sonner"
 import "./index.css"
 import { ThemeProvider } from "@/components"
 import { queryClient } from "@/lib/queryClient"
-import { startAppFrame } from "@/lib/appFrame"
 import { startSchoolClock } from "@/lib/schoolClock"
 import App from "./App.jsx"
-startAppFrame()
 startSchoolClock()
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -15,9 +15,9 @@ export function RootLayout() {
     navigate("/login")
   }
   return (
-    <div className="flex h-full overflow-hidden bg-[oklch(0.97_0_0)] text-foreground">
+    <div className="flex h-dvh overflow-hidden bg-[oklch(0.97_0_0)] text-foreground">
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
-      <aside className="hidden h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+      <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
         <div className="px-4 py-5">
           <img
             src={logo}
@@ -56,11 +56,11 @@ export function RootLayout() {
       </aside>
       <div className="flex min-w-0 flex-1 flex-col bg-[oklch(0.97_0_0)]">
         <TopBar />
-        <main className="min-h-0 flex-1 overflow-y-auto overscroll-none p-4 md:p-6">
+        <main className="min-h-0 flex-1 overflow-y-auto p-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:p-6 md:pb-6">
           <Outlet />
         </main>
-        <BottomNav />
       </div>
+      <BottomNav />
     </div>
   )
 }
