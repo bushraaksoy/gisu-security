@@ -8,16 +8,17 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="shrink-0 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="shrink-0 border-t bg-background md:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div className="flex">
+      <div className="flex pt-2 pb-1">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
               cn(
-                "flex min-w-11 flex-1 flex-col items-center gap-1 pt-2 pb-2 text-[11px] leading-none",
+                "flex min-w-11 flex-1 flex-col items-center gap-1 text-[11px] leading-none",
                 isActive
                   ? "font-medium text-[#108040]"
                   : "text-muted-foreground"
@@ -29,11 +30,11 @@ export function BottomNav() {
                 <span className="flex size-8 items-center justify-center rounded-full">
                   <tab.icon className="size-5" />
                 </span>
-                <span className="inline-grid items-end justify-items-center">
-                  <span className="col-start-1 row-start-1">{tab.label}</span>
+                <span className="relative pb-1.5">
+                  {tab.label}
                   <span
                     className={cn(
-                      "col-start-1 row-start-2 mt-1 h-1 w-full rounded-full",
+                      "absolute inset-x-0 bottom-0 mx-auto h-1 rounded-full",
                       isActive ? "bg-[#108040]" : "bg-transparent"
                     )}
                   />

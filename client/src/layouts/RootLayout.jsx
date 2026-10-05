@@ -15,9 +15,9 @@ export function RootLayout() {
     navigate("/login")
   }
   return (
-    <div className="flex h-dvh overflow-hidden bg-[oklch(0.97_0_0)] text-foreground">
+    <div className="flex h-full overflow-hidden bg-[oklch(0.97_0_0)] text-foreground">
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
-      <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+      <aside className="hidden h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
         <div className="px-4 py-5">
           <img
             src={logo}
