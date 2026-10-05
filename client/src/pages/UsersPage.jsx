@@ -47,14 +47,30 @@ const emptyDraft = () => ({
   role: "ADMIN",
   guardianId: "",
 })
-function studentNames(user, directory) {
+const studentPreviewCount = 2
+const stickyAction =
+  "sticky right-0 z-10 bg-background pl-3 shadow-[-6px_0_8px_-6px_rgb(0_0_0/0.15)]"
+function studentNameList(user, directory) {
   if (user.role !== "PARENT" || !user.guardianId || !directory) {
+    return []
+  }
+  return studentsForGuardian(directory, user.guardianId).map(({ student }) =>
+    directoryName(student)
+  )
+}
+function studentNames(user, directory) {
+  const names = studentNameList(user, directory)
+  return names.length > 0 ? names.join(", ") : "—"
+}
+function studentPreview(names, expanded) {
+  if (names.length === 0) {
     return "—"
   }
-  const names = studentsForGuardian(directory, user.guardianId).map(
-    ({ student }) => directoryName(student)
-  )
-  return names.join(", ") || "—"
+  if (expanded || names.length <= studentPreviewCount) {
+    return names.join(", ")
+  }
+  const shown = names.slice(0, studentPreviewCount).join(", ")
+  return `${shown} +${names.length - studentPreviewCount} more`
 }
 export function UsersPage() {
   const { user: actor } = useAuth()
@@ -73,9 +89,21 @@ export function UsersPage() {
   const [formError, setFormError] = useState("")
   const [userQuery, setUserQuery] = useState("")
   const [headerSlot, setHeaderSlot] = useState(null)
+  const [expandedStudents, setExpandedStudents] = useState(() => new Set())
   useEffect(() => {
     setHeaderSlot(document.getElementById("header-action"))
   }, [])
+  function toggleStudents(id) {
+    setExpandedStudents((current) => {
+      const next = new Set(current)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
   const visibleUsers = useMemo(
     () =>
       users.filter((user) =>
@@ -210,107 +238,139 @@ export function UsersPage() {
             </p>
           ) : (
             <RecordCards>
-              {visibleUsers.map((user) => (
-                <RecordCard key={user.id}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {user.username}
-                      </p>
-                      {user.email &&
-                      user.email.toLowerCase() !==
-                        user.username.toLowerCase() ? (
-                        <p className="text-xs text-muted-foreground">
-                          {user.email}
-                        </p>
-                      ) : null}
-                    </div>
-                    <span className="shrink-0 rounded-full bg-[oklch(0.97_0_0)] px-2 py-1 text-xs">
-                      {roleLabels[user.role]}
-                    </span>
-                  </div>
-                  {user.role === "PARENT" ? (
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Students · {studentNames(user, directory.data)}
-                    </p>
-                  ) : null}
-                  <div className="mt-2 flex gap-1 border-t border-border pt-2">
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => openEdit(user)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="xs"
+              {visibleUsers.map((user) => {
+                const names = studentNameList(user, directory.data)
+                const canExpand = names.length > studentPreviewCount
+                const expanded = expandedStudents.has(user.id)
+                return (
+                  <RecordCard key={user.id}>
+                    <button
+                      type="button"
+                      className={cn(
+                        "w-full text-left",
+                        canExpand ? "" : "cursor-default"
+                      )}
                       onClick={() => {
-                        if (window.confirm(`Delete ${user.name}?`)) {
-                          removeUser.mutate(user.id)
+                        if (canExpand) {
+                          toggleStudents(user.id)
                         }
                       }}
+                      aria-expanded={canExpand ? expanded : undefined}
                     >
-                      Delete
-                    </Button>
-                  </div>
-                </RecordCard>
-              ))}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {user.username}
+                          </p>
+                          {user.email &&
+                          user.email.toLowerCase() !==
+                            user.username.toLowerCase() ? (
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
+                          ) : null}
+                        </div>
+                        <span className="shrink-0 rounded-full bg-[oklch(0.97_0_0)] px-2 py-1 text-xs">
+                          {roleLabels[user.role]}
+                        </span>
+                      </div>
+                      {user.role === "PARENT" ? (
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Students · {studentPreview(names, expanded)}
+                        </p>
+                      ) : null}
+                    </button>
+                    <div className="mt-2 flex gap-1 border-t border-border pt-2">
+                      <Button
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => openEdit(user)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => {
+                          if (window.confirm(`Delete ${user.name}?`)) {
+                            removeUser.mutate(user.id)
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </RecordCard>
+                )
+              })}
             </RecordCards>
           )}
           <DataTable
             header={
               <TableRow>
-                <TableHead className="w-14">#</TableHead>
+                <TableHead className="w-14 pl-4">#</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Username</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Students</TableHead>
-                <TableHead className="w-32" />
+                <TableHead className={cn("w-32 text-right", stickyAction)} />
               </TableRow>
             }
           >
             {visibleUsers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-muted-foreground">
+                <TableCell
+                  colSpan={7}
+                  className="pl-4 text-muted-foreground"
+                >
                   {users.length === 0 ? "No users yet." : "No users found."}
                 </TableCell>
               </TableRow>
             ) : (
-              visibleUsers.map((user, index) => (
-                <TableRow key={user.id}>
-                  <TableCell className="text-muted-foreground">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email || "—"}</TableCell>
-                  <TableCell>{roleLabels[user.role]}</TableCell>
-                  <TableCell>{studentNames(user, directory.data)}</TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => openEdit(user)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        if (window.confirm(`Delete ${user.name}?`)) {
-                          removeUser.mutate(user.id)
-                        }
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
+              visibleUsers.map((user, index) => {
+                const names = studentNames(user, directory.data)
+                return (
+                  <TableRow key={user.id}>
+                    <TableCell className="pl-4 text-muted-foreground">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.email || "—"}</TableCell>
+                    <TableCell>{roleLabels[user.role]}</TableCell>
+                    <TableCell>
+                      <div
+                        className="max-w-56 overflow-x-auto"
+                        title={names}
+                      >
+                        {names}
+                      </div>
+                    </TableCell>
+                    <TableCell className={cn("text-right", stickyAction)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => openEdit(user)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (window.confirm(`Delete ${user.name}?`)) {
+                            removeUser.mutate(user.id)
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             )}
           </DataTable>
         </>

@@ -8,7 +8,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-40 border-t bg-background md:hidden"
+      className="shrink-0 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <div className="flex">
         {tabs.map((tab) => (
@@ -17,7 +17,7 @@ export function BottomNav() {
             to={tab.to}
             className={({ isActive }) =>
               cn(
-                "flex min-w-11 flex-1 flex-col items-center text-[11px] leading-none",
+                "flex min-w-11 flex-1 flex-col items-center gap-1 pt-2 pb-2 text-[11px] leading-none",
                 isActive
                   ? "font-medium text-[#108040]"
                   : "text-muted-foreground"
@@ -26,19 +26,17 @@ export function BottomNav() {
           >
             {({ isActive }) => (
               <>
-                <span className="flex flex-col items-center gap-1 pt-2">
-                  <span className="flex size-8 items-center justify-center rounded-full">
-                    <tab.icon className="size-5" />
-                  </span>
-                  {tab.label}
+                <span className="flex size-8 items-center justify-center rounded-full">
+                  <tab.icon className="size-5" />
                 </span>
-                <span className="inline-grid h-[calc(1rem+env(safe-area-inset-bottom))] items-end overflow-hidden">
-                  <span className="invisible col-start-1 row-start-1">
-                    {tab.label}
-                  </span>
-                  {isActive ? (
-                    <span className="col-start-1 row-start-1 h-1 rounded-full bg-[#108040]" />
-                  ) : null}
+                <span className="inline-grid items-end justify-items-center">
+                  <span className="col-start-1 row-start-1">{tab.label}</span>
+                  <span
+                    className={cn(
+                      "col-start-1 row-start-2 mt-1 h-1 w-full rounded-full",
+                      isActive ? "bg-[#108040]" : "bg-transparent"
+                    )}
+                  />
                 </span>
               </>
             )}

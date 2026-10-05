@@ -56,11 +56,11 @@ export function RootLayout() {
       </aside>
       <div className="flex min-w-0 flex-1 flex-col bg-[oklch(0.97_0_0)]">
         <TopBar />
-        <main className="min-h-0 flex-1 overflow-y-auto p-4 pb-[calc(8rem+env(safe-area-inset-bottom))] md:p-6">
+        <main className="min-h-0 flex-1 overflow-y-auto overscroll-none p-4 md:p-6">
           <Outlet />
         </main>
+        <BottomNav />
       </div>
-      <BottomNav />
     </div>
   )
 }
