@@ -107,33 +107,33 @@ export function HomePage() {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <Link
           to="/dropoff"
-          className="flex h-28 items-center gap-4 rounded-2xl bg-background px-4 shadow-md"
+          className="ios-action-card flex h-28 items-center gap-4 rounded-[12px] px-4"
         >
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f6c9a4] text-[#8c4314]">
             <LogIn className="size-5" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-semibold">Drop off</span>
-            <span className="mt-0.5 block text-sm text-muted-foreground">
+            <span className="mt-0.5 block text-sm text-[color:var(--ios-label-secondary)]">
               Arriving at school
             </span>
           </span>
-          <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+          <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
         </Link>
         <Link
           to="/pickup"
-          className="flex h-28 items-center gap-4 rounded-2xl bg-background px-4 shadow-md"
+          className="ios-action-card flex h-28 items-center gap-4 rounded-[12px] px-4"
         >
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#c5dff3] text-[#145a86]">
             <LogOut className="size-5" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-semibold">Pick up</span>
-            <span className="mt-0.5 block text-sm text-muted-foreground">
+            <span className="mt-0.5 block text-sm text-[color:var(--ios-label-secondary)]">
               Leaving school
             </span>
           </span>
-          <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+          <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
         </Link>
       </div>
       {todayQuery.error ? (

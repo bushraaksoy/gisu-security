@@ -16,7 +16,7 @@ export function RootLayout() {
     navigate("/login")
   }
   return (
-    <div className="flex h-dvh overflow-hidden bg-[oklch(0.97_0_0)] text-foreground">
+    <div className="ios-canvas flex h-dvh overflow-hidden text-foreground">
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
       {!isDisplay ? (
         <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
@@ -57,7 +57,7 @@ export function RootLayout() {
           ) : null}
         </aside>
       ) : null}
-      <div className="flex min-w-0 flex-1 flex-col bg-[oklch(0.97_0_0)]">
+      <div className="ios-canvas flex min-w-0 flex-1 flex-col">
         {!isDisplay ? <TopBar /> : null}
         <main
           className={cn(

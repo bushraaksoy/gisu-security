@@ -1,0 +1,99 @@
+/* Reversible iOS polish — remove this import from index.css to revert. */
+
+:root {
+  --ios-bg: #f2f2f7;
+  --ios-surface: #ffffff;
+  --ios-separator: rgba(60, 60, 67, 0.12);
+  --ios-tint: #108040;
+  --ios-tint-soft: color-mix(in srgb, #108040 14%, white);
+  --ios-label-secondary: rgba(60, 60, 67, 0.6);
+  --ios-fill: rgba(120, 120, 128, 0.12);
+  --ios-bar: rgba(255, 255, 255, 0.72);
+  --primary: var(--ios-tint);
+  --primary-foreground: #ffffff;
+  --ring: color-mix(in srgb, #108040 45%, white);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --background: var(--ios-surface);
+    --card: var(--ios-surface);
+    --muted: var(--ios-fill);
+    --muted-foreground: var(--ios-label-secondary);
+    --border: var(--ios-separator);
+    --input: var(--ios-separator);
+  }
+
+  html,
+  body,
+  #root {
+    background-color: var(--ios-bg) !important;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "SF Pro Text",
+      "SF Pro Display",
+      "Segoe UI",
+      system-ui,
+      sans-serif;
+  }
+}
+
+.ios-canvas {
+  background-color: var(--ios-bg);
+}
+
+.ios-topbar {
+  background-color: var(--ios-bar);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid var(--ios-separator);
+}
+
+.ios-tabbar {
+  background-color: var(--ios-bar);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid var(--ios-separator);
+}
+
+.ios-tab-active {
+  color: var(--ios-tint);
+}
+
+.ios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--ios-surface);
+}
+
+.ios-list > * + * {
+  border-top: 0.5px solid var(--ios-separator);
+}
+
+.ios-row {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+}
+
+.ios-search {
+  background-color: var(--ios-fill) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.ios-action-card {
+  background-color: var(--ios-surface);
+  box-shadow: none;
+  border: 0.5px solid var(--ios-separator);
+}
+
+@media (min-width: 768px) {
+  .ios-canvas {
+    background-color: oklch(0.97 0 0);
+  }
+}

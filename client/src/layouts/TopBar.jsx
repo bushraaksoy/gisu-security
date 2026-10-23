@@ -31,8 +31,8 @@ export function TopBar() {
               ? "/dashboard"
               : null
   return (
-    <header className="sticky top-0 z-30 shrink-0 px-4 pt-[env(safe-area-inset-top)]">
-      <div className="flex min-w-0 items-center gap-1 pt-8 pb-4">
+    <header className="ios-topbar sticky top-0 z-30 shrink-0 px-4 pt-[env(safe-area-inset-top)]">
+      <div className="flex min-w-0 items-center gap-1 pt-3 pb-3 md:pt-8 md:pb-4">
         {backTo ? (
           <button
             type="button"

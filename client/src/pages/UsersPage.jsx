@@ -221,7 +221,7 @@ export function UsersPage() {
         onChange={(event) => setUserQuery(event.target.value)}
         placeholder="Search users"
         aria-label="Search users"
-        className="h-9 min-w-0 flex-1 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
+        className="h-9 min-w-0 flex-1 ios-search rounded-full px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
       />
 
       {pageError && !open ? (

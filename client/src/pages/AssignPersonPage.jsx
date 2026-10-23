@@ -142,7 +142,7 @@ export function AssignPersonPage() {
                 placeholder="Sign-in name"
                 aria-label="Sign-in name"
                 autoComplete="off"
-                className="h-9 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
+                className="h-9 ios-search rounded-full px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
               />
               <Button
                 type="submit"

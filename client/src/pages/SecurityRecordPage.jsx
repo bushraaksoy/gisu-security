@@ -80,7 +80,7 @@ export function SecurityRecordPage({ mode }) {
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Search students"
         aria-label="Search students"
-        className="h-9 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
+        className="h-9 ios-search rounded-full px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
       />
       {selected.length > 0 ? (
         <div className="flex flex-col gap-2">

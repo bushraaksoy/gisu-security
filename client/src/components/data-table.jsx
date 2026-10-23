@@ -13,13 +13,13 @@ export function DataTable({ header, children }) {
 }
 
 export function RecordCards({ children }) {
-  return <div className="flex flex-col gap-2 md:hidden">{children}</div>
+  return <div className="ios-list md:hidden">{children}</div>
 }
 
 export function RecordCard({ children, className, ...props }) {
   return (
     <article
-      className={cn("rounded-2xl bg-background px-5 py-2 text-sm", className)}
+      className={cn("ios-row text-sm", className)}
       {...props}
     >
       {children}
