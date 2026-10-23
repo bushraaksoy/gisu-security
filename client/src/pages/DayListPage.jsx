@@ -23,7 +23,7 @@ const lists = {
     subtitle: "Students who have not arrived today",
     empty: "Everyone has arrived.",
     pill: {
-      label: "Absent",
+      label: "Not arrived",
       className: "bg-[#f8eadc] text-[#c47a32]",
     },
   },

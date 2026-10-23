@@ -17,7 +17,7 @@ const cards = [
   {
     to: "/absent",
     key: "absent",
-    label: "absent",
+    label: "not arrived",
     icon: UserX,
     wrap: "bg-orange-50 text-orange-950",
     iconWrap: "bg-orange-100 text-orange-800",

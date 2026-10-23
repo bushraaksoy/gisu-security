@@ -83,7 +83,7 @@ function pageTitle(pathname, role) {
     return role === "ADMIN" ? "Students" : "In school"
   }
   if (pathname.startsWith("/absent")) {
-    return "Absent"
+    return "Not arrived"
   }
   if (pathname.startsWith("/picked-up")) {
     return "Picked up"
