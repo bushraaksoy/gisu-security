@@ -20,11 +20,13 @@ export function GateVisitPage({ mode }) {
   const children = todayQuery.data?.children ?? []
   const choices = children.filter((child) =>
     mode === "pickup"
-      ? child.canPickup && child.state === "at-school" && child.dropoffId
+      ? child.canPickup &&
+        !child.pickupDone &&
+        child.state === "at-school" &&
+        child.dropoffId
       : child.canDropoff &&
-        (child.state === "none" ||
-          child.state === "rejected" ||
-          child.state === "picked-up")
+        !child.dropoffDone &&
+        (child.state === "none" || child.state === "rejected")
   )
   const permitted = children.filter((child) =>
     mode === "pickup" ? child.canPickup : child.canDropoff
@@ -84,8 +86,8 @@ export function GateVisitPage({ mode }) {
         ? "No students you can pick up."
         : "No students you can drop off."
       : mode === "pickup"
-        ? "No one is at school yet."
-        : "Everyone is already at the gate today."
+        ? "No one is at school to pick up."
+        : "Everyone has already been dropped off today."
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col gap-4 md:mx-0">
       {todayQuery.isPending ? (

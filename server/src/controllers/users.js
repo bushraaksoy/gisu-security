@@ -27,7 +27,7 @@ function requiredRole(value) {
 }
 function visibleRoles(actor) {
   if (actor.role === Role.SUPERADMIN) {
-    return [Role.ADMIN, Role.PARENT, Role.SECURITY]
+    return [Role.ADMIN, Role.PARENT, Role.SECURITY, Role.DISPLAY]
   }
   return [Role.ADMIN, Role.PARENT]
 }
@@ -35,7 +35,10 @@ function assertCanAssign(actor, role) {
   if (role === Role.SUPERADMIN) {
     throw new HttpError(403, "That role cannot be assigned")
   }
-  if (actor.role !== Role.SUPERADMIN && role === Role.SECURITY) {
+  if (
+    actor.role !== Role.SUPERADMIN &&
+    (role === Role.SECURITY || role === Role.DISPLAY)
+  ) {
     throw new HttpError(403, "That role cannot be assigned")
   }
 }

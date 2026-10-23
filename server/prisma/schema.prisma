@@ -12,6 +12,7 @@ enum Role {
   ADMIN
   SECURITY
   PARENT
+  DISPLAY
 }
 
 enum GateLogType {

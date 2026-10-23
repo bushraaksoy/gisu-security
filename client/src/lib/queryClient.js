@@ -17,5 +17,6 @@ export const queryKeys = {
   gateAllowed: ["gate-allowed"],
   gatePermissions: ["gate-permissions"],
   present: ["present"],
+  pendingPickups: ["pending-pickups"],
   directory: ["directory"],
 }

@@ -8,40 +8,70 @@ import { TableCell, TableHead, TableRow } from "@/components/ui/table"
 import { errorMessage } from "@/lib/errors"
 import { matchesDirectoryQuery } from "@/lib/directory"
 import { queryKeys } from "@/lib/queryClient"
+const lists = {
+  present: {
+    key: "present",
+    subtitle: "Students currently at school",
+    empty: "No one is at school.",
+    pill: {
+      label: "At school",
+      className: "bg-[#f3faf4] text-[#6a9a78]",
+    },
+  },
+  absent: {
+    key: "absent",
+    subtitle: "Students who have not arrived today",
+    empty: "Everyone has arrived.",
+    pill: {
+      label: "Absent",
+      className: "bg-[#f8eadc] text-[#c47a32]",
+    },
+  },
+  pickedUp: {
+    key: "pickedUp",
+    subtitle: "Students picked up today",
+    empty: "No one has been picked up yet.",
+    pill: {
+      label: "Picked up",
+      className: "bg-[#e3eefb] text-[#3a6eae]",
+    },
+  },
+}
 function classText(student) {
   return student.classLabel || "—"
 }
-function AtSchool() {
+function StatusPill({ pill }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#f3faf4] px-2 py-0.5 text-[10px] font-medium text-[#6a9a78]">
+    <span
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${pill.className}`}
+    >
       <span className="size-1.5 rounded-full bg-current" />
-      At school
+      {pill.label}
     </span>
   )
 }
-export function InSchoolPage() {
+export function DayListPage({ list }) {
+  const config = lists[list]
   const [query, setQuery] = useState("")
-  const presentQuery = useQuery({
+  const dayQuery = useQuery({
     queryKey: queryKeys.present,
     queryFn: getPresent,
     refetchInterval: 5000,
     staleTime: 0,
   })
   const students = useMemo(() => {
-    const all = presentQuery.data?.students ?? []
+    const all = dayQuery.data?.[config.key]?.students ?? []
     return all.filter((student) =>
       matchesDirectoryQuery(
         `${student.name} ${student.classLabel ?? ""}`,
         query
       )
     )
-  }, [presentQuery.data, query])
-  const empty = query.trim() ? "No students found." : "No one is at school."
+  }, [dayQuery.data, config.key, query])
+  const empty = query.trim() ? "No students found." : config.empty
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-base text-muted-foreground">
-        Students currently at school
-      </p>
+      <p className="text-base text-muted-foreground">{config.subtitle}</p>
       <Input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
@@ -49,11 +79,9 @@ export function InSchoolPage() {
         aria-label="Search students"
         className="h-9 rounded-full bg-background px-3 py-0 leading-9 placeholder:text-xs placeholder:leading-9 placeholder:text-[oklch(0.75_0_0)]"
       />
-      {presentQuery.error ? (
-        <p className="text-sm text-destructive">
-          {errorMessage(presentQuery.error)}
-        </p>
-      ) : presentQuery.isPending ? (
+      {dayQuery.error ? (
+        <p className="text-sm text-destructive">{errorMessage(dayQuery.error)}</p>
+      ) : dayQuery.isPending ? (
         <p className="text-sm text-muted-foreground">Loading students…</p>
       ) : (
         <>
@@ -72,7 +100,7 @@ export function InSchoolPage() {
                       <p className="text-xs text-muted-foreground">
                         {classText(student)}
                       </p>
-                      <AtSchool />
+                      <StatusPill pill={config.pill} />
                     </div>
                   </div>
                 </RecordCard>
@@ -109,7 +137,7 @@ export function InSchoolPage() {
                   <TableCell>
                     <div className="flex flex-col items-start gap-1">
                       <span>{classText(student)}</span>
-                      <AtSchool />
+                      <StatusPill pill={config.pill} />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -120,4 +148,13 @@ export function InSchoolPage() {
       )}
     </div>
   )
+}
+export function InSchoolPage() {
+  return <DayListPage list="present" />
+}
+export function AbsentPage() {
+  return <DayListPage list="absent" />
+}
+export function PickedUpPage() {
+  return <DayListPage list="pickedUp" />
 }

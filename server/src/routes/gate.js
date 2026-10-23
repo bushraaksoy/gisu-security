@@ -5,6 +5,7 @@ import {
   listAllowed,
   listPermissions,
   lookupParent,
+  pendingPickups,
   pickup,
   present,
   recordVisit,
@@ -25,6 +26,11 @@ gateRouter.get(
   "/present",
   requireRole(Role.SUPERADMIN, Role.ADMIN, Role.SECURITY),
   present,
+);
+gateRouter.get(
+  "/pending-pickups",
+  requireRole(Role.DISPLAY, Role.SUPERADMIN, Role.ADMIN),
+  pendingPickups,
 );
 gateRouter.get(
   "/students",

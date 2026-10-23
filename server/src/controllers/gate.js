@@ -158,6 +158,16 @@ function visitFor(dropoffs) {
       ) ?? null;
   return { dropoff, pickup };
 }
+function dropoffDoneToday(dropoffs) {
+  return (dropoffs ?? []).some(
+    (dropoff) => dropoff.status === GateLogStatus.APPROVED,
+  );
+}
+function pickupDoneToday(dropoffs) {
+  return (dropoffs ?? []).some((dropoff) =>
+    dropoff.pickups.some((pickup) => pickup.status === GateLogStatus.APPROVED),
+  );
+}
 export const today = async (req, res) => {
   const access = await accessibleStudents(req.user);
   const visits = await todayVisits(
@@ -167,6 +177,8 @@ export const today = async (req, res) => {
     .map((item) => {
       const logs = visits.get(item.student.id);
       const { dropoff, pickup } = visitFor(logs);
+      const dropoffDone = dropoffDoneToday(logs);
+      const pickupDone = pickupDoneToday(logs);
       return {
         id: item.student.id,
         name: studentName(item.student),
@@ -177,6 +189,8 @@ export const today = async (req, res) => {
         acted: actedToday(req.user.id, logs),
         canDropoff: item.canDropoff,
         canPickup: item.canPickup,
+        dropoffDone,
+        pickupDone,
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -202,7 +216,14 @@ export const dropoff = async (req, res) => {
     if (!student) {
       throw new HttpError(400, "Student was not found");
     }
-    const { dropoff: current } = visitFor(visits.get(studentId));
+    const logs = visits.get(studentId);
+    if (dropoffDoneToday(logs)) {
+      throw new HttpError(
+        409,
+        `${studentName(student)} was already dropped off today`,
+      );
+    }
+    const { dropoff: current } = visitFor(logs);
     if (current && openDropoff(current)) {
       throw new HttpError(
         409,
@@ -249,6 +270,10 @@ export const pickup = async (req, res) => {
     include: { pickups: true },
   });
   const byId = new Map(dropoffs.map((log) => [log.id, log]));
+  const studentIds = [
+    ...new Set(dropoffs.map((log) => log.sisStudentId).filter(Boolean)),
+  ];
+  const visits = await todayVisits(studentIds);
   for (const dropoffId of dropoffIds) {
     const log = byId.get(dropoffId);
     const name = log?.studentName ?? "Student";
@@ -266,6 +291,9 @@ export const pickup = async (req, res) => {
       log.occurredAt >= end
     ) {
       throw new HttpError(409, `${name} is not at school`);
+    }
+    if (pickupDoneToday(visits.get(log.sisStudentId))) {
+      throw new HttpError(409, `${name} was already picked up today`);
     }
     const busy = log.pickups.some(
       (item) =>
@@ -582,37 +610,107 @@ export const recordVisit = async (req, res) => {
   );
   res.status(201).json(logs);
 };
+function bucket(students) {
+  return { count: students.length, students };
+}
 export const present = async (_req, res) => {
   const { start, end } = schoolDayRange();
-  const dropoffs = await prisma.gateLog.findMany({
-    where: {
-      type: GateLogType.DROPOFF,
-      status: GateLogStatus.APPROVED,
-      sisStudentId: { not: null },
-      occurredAt: { gte: start, lt: end },
-    },
-    include: { pickups: { select: { status: true } } },
-    orderBy: { occurredAt: "desc" },
-  });
-  const seen = new Set();
-  const students = [];
+  const [directory, dropoffs, pickups] = await Promise.all([
+    loadDirectory(),
+    prisma.gateLog.findMany({
+      where: {
+        type: GateLogType.DROPOFF,
+        status: GateLogStatus.APPROVED,
+        sisStudentId: { not: null },
+        occurredAt: { gte: start, lt: end },
+      },
+      include: { pickups: { select: { status: true } } },
+      orderBy: { occurredAt: "desc" },
+    }),
+    prisma.gateLog.findMany({
+      where: {
+        type: GateLogType.PICKUP,
+        status: GateLogStatus.APPROVED,
+        sisStudentId: { not: null },
+        occurredAt: { gte: start, lt: end },
+      },
+      orderBy: { occurredAt: "desc" },
+    }),
+  ]);
+  const arrivedIds = new Set();
+  const presentStudents = [];
   for (const log of dropoffs) {
-    if (seen.has(log.sisStudentId)) {
+    if (arrivedIds.has(log.sisStudentId)) {
       continue;
     }
-    seen.add(log.sisStudentId);
+    arrivedIds.add(log.sisStudentId);
     const pickedUp = log.pickups.some(
       (pickup) => pickup.status === GateLogStatus.APPROVED,
     );
     if (pickedUp) {
       continue;
     }
-    students.push({
+    presentStudents.push({
       id: log.sisStudentId,
       name: log.studentName,
       classLabel: log.classLabel,
     });
   }
+  presentStudents.sort((a, b) => a.name.localeCompare(b.name));
+  const pickedSeen = new Set();
+  const pickedUpStudents = [];
+  for (const log of pickups) {
+    if (pickedSeen.has(log.sisStudentId)) {
+      continue;
+    }
+    pickedSeen.add(log.sisStudentId);
+    pickedUpStudents.push({
+      id: log.sisStudentId,
+      name: log.studentName,
+      classLabel: log.classLabel,
+    });
+  }
+  pickedUpStudents.sort((a, b) => a.name.localeCompare(b.name));
+  const absentStudents = directory.students
+    .filter((student) => !arrivedIds.has(student.id))
+    .map((student) => ({
+      id: student.id,
+      name: studentName(student),
+      classLabel: classLabel(student),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  res.json({
+    present: bucket(presentStudents),
+    absent: bucket(absentStudents),
+    pickedUp: bucket(pickedUpStudents),
+  });
+};
+export const pendingPickups = async (_req, res) => {
+  const { start, end } = schoolDayRange();
+  const logs = await prisma.gateLog.findMany({
+    where: {
+      type: GateLogType.PICKUP,
+      status: GateLogStatus.PENDING,
+      sisStudentId: { not: null },
+      occurredAt: { gte: start, lt: end },
+    },
+    orderBy: { occurredAt: "desc" },
+  });
+  const seen = new Set();
+  const students = [];
+  for (const log of logs) {
+    if (seen.has(log.sisStudentId)) {
+      continue;
+    }
+    seen.add(log.sisStudentId);
+    students.push({
+      id: log.sisStudentId,
+      name: log.studentName,
+      classLabel: log.classLabel,
+      visitId: log.visitId,
+      occurredAt: log.occurredAt,
+    });
+  }
   students.sort((a, b) => a.name.localeCompare(b.name));
-  res.json({ count: students.length, students });
+  res.json({ students });
 };

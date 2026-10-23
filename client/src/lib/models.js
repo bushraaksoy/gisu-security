@@ -1,14 +1,15 @@
-export const roles = ["SUPERADMIN", "ADMIN", "SECURITY", "PARENT"]
+export const roles = ["SUPERADMIN", "ADMIN", "SECURITY", "PARENT", "DISPLAY"]
 export const gateLogTypes = ["DROPOFF", "PICKUP"]
 export const roleLabels = {
   SUPERADMIN: "Super Admin",
   ADMIN: "Admin",
   SECURITY: "Security",
   PARENT: "Guardian",
+  DISPLAY: "Display",
 }
 export function assignableRoles(actorRole) {
   if (actorRole === "SUPERADMIN") {
-    return ["ADMIN", "SECURITY", "PARENT"]
+    return ["ADMIN", "SECURITY", "PARENT", "DISPLAY"]
   }
   return ["ADMIN", "PARENT"]
 }

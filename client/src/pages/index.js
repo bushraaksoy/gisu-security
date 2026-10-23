@@ -2,7 +2,12 @@ export { AssignPersonPage } from "./AssignPersonPage"
 export { DashboardPage } from "./DashboardPage"
 export { GateVisitPage } from "./GateVisitPage"
 export { HomePage } from "./HomePage"
-export { InSchoolPage } from "./InSchoolPage"
+export {
+  AbsentPage,
+  InSchoolPage,
+  PickedUpPage,
+} from "./DayListPage"
+export { PickupBoardPage } from "./PickupBoardPage"
 export { GuardianDetailPage } from "./GuardianDetailPage"
 export { GuardiansPage } from "./GuardiansPage"
 export { LoginPage } from "./LoginPage"

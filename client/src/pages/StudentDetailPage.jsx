@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { DataTable, RecordCard, RecordCards } from "@/components/data-table"
 import { TableCell, TableHead, TableRow } from "@/components/ui/table"
 import { errorMessage } from "@/lib/errors"
@@ -50,12 +50,9 @@ export function StudentDetailPage() {
                 {guardians.map(({ guardian, relation }) => (
                   <RecordCard key={guardian.id}>
                     <div className="flex items-start justify-between gap-3">
-                      <Link
-                        to={`/guardians/${guardian.id}`}
-                        className="min-w-0 font-medium hover:underline"
-                      >
+                      <p className="min-w-0 font-medium">
                         {directoryName(guardian)}
-                      </Link>
+                      </p>
                       <p className="shrink-0 text-xs">
                         {relationLabels[relation]}
                       </p>
@@ -81,13 +78,8 @@ export function StudentDetailPage() {
               ) : (
                 guardians.map(({ guardian, relation }) => (
                   <TableRow key={guardian.id}>
-                    <TableCell>
-                      <Link
-                        to={`/guardians/${guardian.id}`}
-                        className="font-medium hover:underline"
-                      >
-                        {directoryName(guardian)}
-                      </Link>
+                    <TableCell className="font-medium">
+                      {directoryName(guardian)}
                     </TableCell>
                     <TableCell>{relationLabels[relation]}</TableCell>
                   </TableRow>

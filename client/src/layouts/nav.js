@@ -7,10 +7,12 @@ import {
   House,
   LayoutDashboard,
   ListChecks,
+  Monitor,
   Settings,
   Users,
 } from "lucide-react"
 export const primaryTabs = [
+  { to: "/board", label: "Board", icon: Monitor, roles: ["DISPLAY"] },
   { to: "/home", label: "Home", icon: House, roles: ["PARENT"] },
   {
     to: "/dashboard",

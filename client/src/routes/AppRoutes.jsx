@@ -3,6 +3,7 @@ import { RootLayout } from "@/layouts"
 import { homeForRole } from "@/layouts/nav"
 import { useAuth, AuthProvider } from "@/lib/auth"
 import {
+  AbsentPage,
   AssignPersonPage,
   DashboardPage,
   GateVisitPage,
@@ -12,6 +13,8 @@ import {
   GuardiansPage,
   LoginPage,
   LogsPage,
+  PickedUpPage,
+  PickupBoardPage,
   ProfilePage,
   SecurityRecordPage,
   SettingsPage,
@@ -36,6 +39,14 @@ export function AppRoutes() {
           <Route element={<RequireAuth />}>
             <Route element={<RootLayout />}>
               <Route index element={<HomeRedirect />} />
+              <Route
+                path="board"
+                element={
+                  <RequireRole roles={["DISPLAY"]}>
+                    <PickupBoardPage />
+                  </RequireRole>
+                }
+              />
               <Route
                 path="home"
                 element={
@@ -81,6 +92,22 @@ export function AppRoutes() {
                 element={
                   <RequireRole roles={["SUPERADMIN", "ADMIN"]}>
                     <InSchoolPage />
+                  </RequireRole>
+                }
+              />
+              <Route
+                path="absent"
+                element={
+                  <RequireRole roles={["SUPERADMIN", "ADMIN"]}>
+                    <AbsentPage />
+                  </RequireRole>
+                }
+              />
+              <Route
+                path="picked-up"
+                element={
+                  <RequireRole roles={["SUPERADMIN", "ADMIN"]}>
+                    <PickedUpPage />
                   </RequireRole>
                 }
               />

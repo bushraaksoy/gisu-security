@@ -31,6 +31,10 @@ export async function getPresent() {
   const { data } = await client.get("/gate/present")
   return data
 }
+export async function getPendingPickups() {
+  const { data } = await client.get("/gate/pending-pickups")
+  return data
+}
 export async function approveGateLog(id, transport) {
   const { data } = await client.post(`/gate-logs/${id}/approve`, { transport })
   return data
