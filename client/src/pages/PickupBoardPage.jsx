@@ -9,6 +9,28 @@ import { queryKeys } from "@/lib/queryClient"
 import { cn } from "@/lib/utils"
 const filterKey = "gisu.board.grades"
 const leaveMs = 420
+const boardPalette = [
+  { bar: "#108040", soft: "#e8f5ec", ink: "#1a5c32", pill: "#d4ebd9" },
+  { bar: "#1070b0", soft: "#e5f1f9", ink: "#145a86", pill: "#d0e6f4" },
+  { bar: "#2090c0", soft: "#e3f4f8", ink: "#1a6a8a", pill: "#cfe8f0" },
+  { bar: "#f09020", soft: "#faf0e4", ink: "#8c5314", pill: "#f3e0c8" },
+  { bar: "#003050", soft: "#e6eef3", ink: "#003050", pill: "#d0dde6" },
+  { bar: "#902060", soft: "#f6e8ef", ink: "#6e1848", pill: "#ecd4e0" },
+]
+function boardColor(id) {
+  let hash = 0
+  const text = String(id ?? "")
+  for (let index = 0; index < text.length; index += 1) {
+    hash = (hash * 31 + text.charCodeAt(index)) >>> 0
+  }
+  return boardPalette[hash % boardPalette.length]
+}
+function boardInitials(name) {
+  const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
+  const first = parts[0]?.charAt(0) ?? ""
+  const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : ""
+  return `${first}${last}`.toUpperCase()
+}
 function gradeFromLabel(label) {
   if (!label) {
     return "Other"
@@ -300,35 +322,71 @@ export function PickupBoardPage() {
               : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           )}
         >
-          {display.map((student) => (
-            <article
-              key={student.id}
-              className={cn(
-                "rounded-2xl bg-background px-5 py-4 shadow-md",
-                student.leaving ? "board-name-out" : "board-name",
-                fullscreen && "px-8 py-8"
-              )}
-            >
-              <p
+          {display.map((student) => {
+            const color = boardColor(student.id)
+            return (
+              <article
+                key={student.id}
                 className={cn(
-                  "font-semibold tracking-tight",
-                  fullscreen ? "text-4xl md:text-5xl" : "text-2xl"
+                  "flex overflow-hidden rounded-2xl shadow-[0_8px_24px_-12px_rgb(0_0_0/0.25)]",
+                  student.leaving ? "board-name-out" : "board-name",
+                  fullscreen ? "min-h-36" : "min-h-24"
                 )}
+                style={{ backgroundColor: color.soft }}
               >
-                {student.name}
-              </p>
-              {student.classLabel ? (
-                <p
+                <span
+                  className="w-2 shrink-0 self-stretch"
+                  style={{ backgroundColor: color.bar }}
+                  aria-hidden
+                />
+                <div
                   className={cn(
-                    "mt-2 text-muted-foreground",
-                    fullscreen ? "text-xl" : "text-sm"
+                    "flex min-w-0 flex-1 items-center gap-4",
+                    fullscreen ? "px-7 py-7" : "px-4 py-4"
                   )}
                 >
-                  {student.classLabel}
-                </p>
-              ) : null}
-            </article>
-          ))}
+                  <span
+                    className={cn(
+                      "inline-flex shrink-0 items-center justify-center rounded-full font-semibold",
+                      fullscreen ? "size-16 text-2xl" : "size-11 text-sm"
+                    )}
+                    style={{
+                      backgroundColor: color.pill,
+                      color: color.ink,
+                    }}
+                    aria-hidden
+                  >
+                    {boardInitials(student.name)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={cn(
+                        "font-semibold tracking-tight",
+                        fullscreen ? "text-4xl md:text-5xl" : "text-2xl"
+                      )}
+                      style={{ color: color.ink }}
+                    >
+                      {student.name}
+                    </p>
+                    {student.classLabel ? (
+                      <span
+                        className={cn(
+                          "mt-2 inline-flex rounded-full px-3 py-1 font-medium",
+                          fullscreen ? "text-base" : "text-xs"
+                        )}
+                        style={{
+                          backgroundColor: color.pill,
+                          color: color.ink,
+                        }}
+                      >
+                        {student.classLabel}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </article>
+            )
+          })}
         </div>
       )}
     </div>
