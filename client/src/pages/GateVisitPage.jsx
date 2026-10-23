@@ -20,16 +20,14 @@ export function GateVisitPage({ mode }) {
   const children = todayQuery.data?.children ?? []
   const choices = children.filter((child) =>
     mode === "pickup"
-      ? child.canPickup &&
-        !child.pickupDone &&
-        child.state === "at-school" &&
-        child.dropoffId
+      ? child.canPickup && child.state === "at-school" && child.dropoffId
       : child.canDropoff &&
-        !child.dropoffDone &&
         (child.state === "none" || child.state === "rejected")
   )
   const permitted = children.filter((child) =>
-    mode === "pickup" ? child.canPickup : child.canDropoff
+    mode === "pickup"
+      ? child.canPickup || child.pickupDone
+      : child.canDropoff || child.dropoffDone
   )
   const [touched, setTouched] = useState(false)
   const [picked, setPicked] = useState(() => new Set())

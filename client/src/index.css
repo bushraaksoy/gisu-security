@@ -177,6 +177,22 @@
   }
 }
 
+@keyframes board-name-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+}
+
 .board-name {
   animation: board-name-in 420ms ease both;
+}
+
+.board-name-out {
+  animation: board-name-out 420ms ease both;
+  pointer-events: none;
 }

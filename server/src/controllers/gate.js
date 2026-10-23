@@ -187,8 +187,8 @@ export const today = async (req, res) => {
         dropoffId: dropoff?.id ?? null,
         own: item.own,
         acted: actedToday(req.user.id, logs),
-        canDropoff: item.canDropoff,
-        canPickup: item.canPickup,
+        canDropoff: item.canDropoff && !dropoffDone,
+        canPickup: item.canPickup && !pickupDone,
         dropoffDone,
         pickupDone,
       };

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { Maximize2, Minimize2 } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getPendingPickups } from "@/api/gate"
 import { errorMessage } from "@/lib/errors"
@@ -8,11 +8,14 @@ import { useAuth } from "@/lib/auth"
 import { queryKeys } from "@/lib/queryClient"
 import { cn } from "@/lib/utils"
 const filterKey = "gisu.board.grades"
+const leaveMs = 420
 function gradeFromLabel(label) {
   if (!label) {
     return "Other"
   }
-  const match = label.match(/^(Year\s+\d+|Early Years(?:\s+\d+)?|Nursery|KG\s*\d*)/i)
+  const match = label.match(
+    /^(Year\s+\d+|Early Years(?:\s+\d+)?|Nursery|KG\s*\d*)/i
+  )
   if (match) {
     return match[1].replace(/\s+/g, " ").trim()
   }
@@ -28,11 +31,48 @@ function loadGrades() {
     return []
   }
 }
+function fullscreenElement() {
+  return (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement ||
+    null
+  )
+}
+async function enterFullscreen(element) {
+  if (element.requestFullscreen) {
+    await element.requestFullscreen()
+    return
+  }
+  if (element.webkitRequestFullscreen) {
+    await element.webkitRequestFullscreen()
+    return
+  }
+  if (element.msRequestFullscreen) {
+    await element.msRequestFullscreen()
+  }
+}
+async function exitFullscreen() {
+  if (document.exitFullscreen) {
+    await document.exitFullscreen()
+    return
+  }
+  if (document.webkitExitFullscreen) {
+    await document.webkitExitFullscreen()
+    return
+  }
+  if (document.msExitFullscreen) {
+    await document.msExitFullscreen()
+  }
+}
 export function PickupBoardPage() {
   const { signOut } = useAuth()
   const navigate = useNavigate()
+  const boardRef = useRef(null)
   const [selectedGrades, setSelectedGrades] = useState(loadGrades)
   const [fullscreen, setFullscreen] = useState(false)
+  const [display, setDisplay] = useState([])
+  const leaveTimers = useRef(new Map())
   const boardQuery = useQuery({
     queryKey: queryKeys.pendingPickups,
     queryFn: getPendingPickups,
@@ -41,7 +81,9 @@ export function PickupBoardPage() {
   })
   const students = boardQuery.data?.students ?? []
   const grades = useMemo(() => {
-    const set = new Set(students.map((student) => gradeFromLabel(student.classLabel)))
+    const set = new Set(
+      students.map((student) => gradeFromLabel(student.classLabel))
+    )
     return [...set].sort((a, b) => a.localeCompare(b))
   }, [students])
   const visible = useMemo(() => {
@@ -57,13 +99,65 @@ export function PickupBoardPage() {
     localStorage.setItem(filterKey, JSON.stringify(selectedGrades))
   }, [selectedGrades])
   useEffect(() => {
+    const nextIds = new Set(visible.map((student) => student.id))
+    setDisplay((current) => {
+      const byId = new Map(current.map((item) => [item.id, item]))
+      const next = []
+      for (const student of visible) {
+        const existing = byId.get(student.id)
+        if (existing?.leaving) {
+          const timer = leaveTimers.current.get(student.id)
+          if (timer) {
+            window.clearTimeout(timer)
+            leaveTimers.current.delete(student.id)
+          }
+        }
+        next.push({ ...student, leaving: false })
+      }
+      for (const item of current) {
+        if (nextIds.has(item.id)) {
+          continue
+        }
+        if (item.leaving) {
+          next.push(item)
+          continue
+        }
+        next.push({ ...item, leaving: true })
+        const timer = window.setTimeout(() => {
+          leaveTimers.current.delete(item.id)
+          setDisplay((list) => list.filter((row) => row.id !== item.id))
+        }, leaveMs)
+        leaveTimers.current.set(item.id, timer)
+      }
+      next.sort((a, b) => a.name.localeCompare(b.name))
+      return next
+    })
+  }, [visible])
+  useEffect(() => {
+    const timers = leaveTimers.current
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer))
+      timers.clear()
+    }
+  }, [])
+  useEffect(() => {
+    function syncFullscreen() {
+      const active = fullscreenElement() === boardRef.current
+      setFullscreen(Boolean(active))
+    }
     function onKey(event) {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !fullscreenElement()) {
         setFullscreen(false)
       }
     }
+    document.addEventListener("fullscreenchange", syncFullscreen)
+    document.addEventListener("webkitfullscreenchange", syncFullscreen)
     window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("fullscreenchange", syncFullscreen)
+      document.removeEventListener("webkitfullscreenchange", syncFullscreen)
+      window.removeEventListener("keydown", onKey)
+    }
   }, [])
   function toggleGrade(grade) {
     setSelectedGrades((current) =>
@@ -72,17 +166,38 @@ export function PickupBoardPage() {
         : [...current, grade]
     )
   }
+  async function openFullscreen() {
+    try {
+      if (boardRef.current) {
+        await enterFullscreen(boardRef.current)
+        setFullscreen(true)
+        return
+      }
+    } catch {
+      // fall through to CSS-only layout
+    }
+    setFullscreen(true)
+  }
+  async function closeFullscreen() {
+    try {
+      if (fullscreenElement()) {
+        await exitFullscreen()
+      }
+    } catch {
+      // ignore
+    }
+    setFullscreen(false)
+  }
   function handleSignOut() {
     signOut()
     navigate("/login")
   }
   return (
     <div
+      ref={boardRef}
       className={cn(
-        "flex min-h-0 flex-1 flex-col",
-        fullscreen
-          ? "fixed inset-0 z-50 bg-[oklch(0.97_0_0)] p-6 md:p-10"
-          : "gap-6"
+        "flex min-h-0 flex-1 flex-col bg-[oklch(0.97_0_0)]",
+        fullscreen ? "fixed inset-0 z-50 p-6 md:p-10" : "gap-6"
       )}
     >
       {!fullscreen ? (
@@ -100,7 +215,7 @@ export function PickupBoardPage() {
               <button
                 type="button"
                 className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-2 text-sm font-medium shadow-md"
-                onClick={() => setFullscreen(true)}
+                onClick={openFullscreen}
               >
                 <Maximize2 className="size-4" />
                 Full screen
@@ -154,7 +269,7 @@ export function PickupBoardPage() {
           type="button"
           aria-label="Exit full screen"
           className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full bg-background/90 px-3 py-2 text-sm shadow-md"
-          onClick={() => setFullscreen(false)}
+          onClick={closeFullscreen}
         >
           <Minimize2 className="size-4" />
           Exit
@@ -165,7 +280,7 @@ export function PickupBoardPage() {
           {errorMessage(boardQuery.error)}
         </p>
       ) : null}
-      {visible.length === 0 && !boardQuery.isPending ? (
+      {display.length === 0 && !boardQuery.isPending ? (
         <div className="flex flex-1 items-center justify-center">
           <p
             className={cn(
@@ -185,11 +300,12 @@ export function PickupBoardPage() {
               : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           )}
         >
-          {visible.map((student) => (
+          {display.map((student) => (
             <article
               key={student.id}
               className={cn(
-                "board-name rounded-2xl bg-background px-5 py-4 shadow-md",
+                "rounded-2xl bg-background px-5 py-4 shadow-md",
+                student.leaving ? "board-name-out" : "board-name",
                 fullscreen && "px-8 py-8"
               )}
             >
