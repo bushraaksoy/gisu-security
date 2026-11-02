@@ -1,7 +1,7 @@
 /* Reversible iOS polish — remove this import from index.css to revert. */
 
 :root {
-  --ios-bg: #f8f8fc;
+  --ios-bg: #fbfbfd;
   --ios-surface: #ffffff;
   --ios-separator: rgba(60, 60, 67, 0.12);
   --ios-tint: #108040;
@@ -94,6 +94,6 @@
 
 @media (min-width: 768px) {
   .ios-canvas {
-    background-color: oklch(0.985 0 0);
+    background-color: oklch(0.99 0 0);
   }
 }
