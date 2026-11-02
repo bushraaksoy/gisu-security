@@ -39,6 +39,9 @@ export const changePassword = async (req, res) => {
   if (!isRecord(req.body)) {
     throw new HttpError(400, "Request body is required")
   }
+  if (req.user.role === "SECURITY" || req.user.role === "DISPLAY") {
+    throw new HttpError(403, "This account cannot change its password")
+  }
   const oldPassword = requiredString(req.body.oldPassword, "oldPassword")
   const newPassword = requiredPassword(req.body.newPassword, "newPassword")
   const user = await prisma.user.findUnique({ where: { id: req.user.id } })

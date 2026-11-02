@@ -16,7 +16,11 @@ export function PasswordNudgeDialog() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   useEffect(() => {
-    if (!user?.mustChangePassword || user.role === "DISPLAY") {
+    if (
+      !user?.mustChangePassword ||
+      user.role === "DISPLAY" ||
+      user.role === "SECURITY"
+    ) {
       setOpen(false)
       return
     }
@@ -35,7 +39,7 @@ export function PasswordNudgeDialog() {
     setOpen(false)
     navigate("/settings/password")
   }
-  if (!user || user.role === "DISPLAY") {
+  if (!user || user.role === "DISPLAY" || user.role === "SECURITY") {
     return null
   }
   return (

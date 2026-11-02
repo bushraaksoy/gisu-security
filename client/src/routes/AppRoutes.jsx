@@ -199,9 +199,7 @@ export function AppRoutes() {
               <Route
                 path="settings/password"
                 element={
-                  <RequireRole
-                    roles={["ADMIN", "PARENT", "SUPERADMIN", "SECURITY"]}
-                  >
+                  <RequireRole roles={["ADMIN", "PARENT", "SUPERADMIN"]}>
                     <ChangePasswordPage />
                   </RequireRole>
                 }

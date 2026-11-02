@@ -26,13 +26,15 @@ export function SettingsPage() {
             <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
           </Link>
         ) : null}
-        <Link
-          to="/settings/password"
-          className="ios-row flex min-h-11 items-center justify-between font-medium"
-        >
-          Change password
-          <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
-        </Link>
+        {user.role === "SECURITY" ? null : (
+          <Link
+            to="/settings/password"
+            className="ios-row flex min-h-11 items-center justify-between font-medium"
+          >
+            Change password
+            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+          </Link>
+        )}
       </div>
       <button
         type="button"
