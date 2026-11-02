@@ -10,10 +10,8 @@ export function TopBar() {
   const guardianMatch = useMatch("/guardians/:guardianId")
   const isGate = pathname === "/dropoff" || pathname === "/pickup"
   const isRecord = pathname === "/log-dropoff" || pathname === "/log-pickup"
-  const isAssign = pathname.startsWith("/profile/assign")
-  const isProfilePassword = pathname === "/profile/password"
-  const isSettingsPassword = pathname === "/settings/password"
-  const isPassword = isProfilePassword || isSettingsPassword
+  const isSettingsNested =
+    pathname.startsWith("/settings/") && pathname !== "/settings"
   const isDayList =
     pathname === "/in-school" ||
     pathname === "/absent" ||
@@ -28,13 +26,11 @@ export function TopBar() {
         ? "/home"
         : isRecord
           ? "/logs"
-          : isAssign || isProfilePassword
-            ? "/profile"
-            : isSettingsPassword
-              ? "/settings"
-              : isDayList
-                ? "/dashboard"
-                : null
+          : isSettingsNested
+            ? "/settings"
+            : isDayList
+              ? "/dashboard"
+              : null
   return (
     <header className="ios-topbar sticky top-0 z-30 shrink-0 px-4 pt-[env(safe-area-inset-top)]">
       <div className="flex min-w-0 items-center gap-1 pt-3 pb-3 md:pt-8 md:pb-4">
@@ -50,7 +46,7 @@ export function TopBar() {
         ) : null}
         {title ? (
           <div className="flex min-w-0 items-center gap-2">
-            {!isPassword && !isAssign ? (
+            {!isSettingsNested ? (
               <img
                 src={mark}
                 alt=""
@@ -59,7 +55,7 @@ export function TopBar() {
             ) : null}
             <h1
               className={
-                isAssign || isPassword
+                isSettingsNested
                   ? "min-w-0 text-lg font-bold leading-tight"
                   : "truncate text-2xl font-bold"
               }
@@ -98,14 +94,14 @@ function pageTitle(pathname, role) {
   if (pathname.startsWith("/board")) {
     return "Pickup board"
   }
-  if (pathname.startsWith("/profile/assign")) {
+  if (pathname.startsWith("/settings/assign")) {
     return "Assign pickup/dropoff person"
   }
-  if (pathname === "/profile/password" || pathname === "/settings/password") {
-    return "Change password"
-  }
-  if (pathname.startsWith("/profile")) {
+  if (pathname === "/settings/profile") {
     return "Profile"
+  }
+  if (pathname === "/settings/password") {
+    return "Change password"
   }
   if (pathname.startsWith("/settings")) {
     return "Settings"

@@ -15,8 +15,8 @@ import {
   LogsPage,
   PickedUpPage,
   PickupBoardPage,
+  AccountPage,
   ChangePasswordPage,
-  ProfilePage,
   SecurityRecordPage,
   SettingsPage,
   StudentDetailPage,
@@ -177,45 +177,44 @@ export function AppRoutes() {
                 }
               />
               <Route
-                path="profile"
-                element={
-                  <RequireRole roles={["PARENT", "SUPERADMIN", "SECURITY"]}>
-                    <ProfilePage />
-                  </RequireRole>
-                }
-              />
-              <Route
-                path="profile/assign"
-                element={
-                  <RequireRole roles={["PARENT"]}>
-                    <AssignPersonPage />
-                  </RequireRole>
-                }
-              />
-              <Route
-                path="profile/password"
-                element={
-                  <RequireRole roles={["PARENT", "SUPERADMIN", "SECURITY"]}>
-                    <ChangePasswordPage />
-                  </RequireRole>
-                }
-              />
-              <Route
                 path="settings"
                 element={
-                  <RequireRole roles={["ADMIN"]}>
+                  <RequireRole
+                    roles={["ADMIN", "PARENT", "SUPERADMIN", "SECURITY"]}
+                  >
                     <SettingsPage />
+                  </RequireRole>
+                }
+              />
+              <Route
+                path="settings/profile"
+                element={
+                  <RequireRole
+                    roles={["ADMIN", "PARENT", "SUPERADMIN", "SECURITY"]}
+                  >
+                    <AccountPage />
                   </RequireRole>
                 }
               />
               <Route
                 path="settings/password"
                 element={
-                  <RequireRole roles={["ADMIN"]}>
+                  <RequireRole
+                    roles={["ADMIN", "PARENT", "SUPERADMIN", "SECURITY"]}
+                  >
                     <ChangePasswordPage />
                   </RequireRole>
                 }
               />
+              <Route
+                path="settings/assign"
+                element={
+                  <RequireRole roles={["PARENT"]}>
+                    <AssignPersonPage />
+                  </RequireRole>
+                }
+              />
+              <Route path="profile/*" element={<Navigate to="/settings" replace />} />
               <Route path="*" element={<HomeRedirect />} />
             </Route>
           </Route>

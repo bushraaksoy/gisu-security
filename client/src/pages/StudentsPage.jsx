@@ -130,9 +130,11 @@ export function StudentsPage() {
                           {directoryName(student)}
                         </Link>
                       )}
-                      <p className="text-xs text-muted-foreground">
-                        {studentId(student)}
-                      </p>
+                      {user?.role === "PARENT" ? null : (
+                        <p className="text-xs text-muted-foreground">
+                          {studentId(student)}
+                        </p>
+                      )}
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <p className="text-xs text-muted-foreground">
@@ -152,14 +154,19 @@ export function StudentsPage() {
               <TableRow>
                 <TableHead className="w-14">#</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Number</TableHead>
+                {user?.role === "PARENT" ? null : (
+                  <TableHead>Number</TableHead>
+                )}
                 <TableHead>Year</TableHead>
               </TableRow>
             }
           >
             {students.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-muted-foreground">
+                <TableCell
+                  colSpan={user?.role === "PARENT" ? 3 : 4}
+                  className="text-muted-foreground"
+                >
                   No students found.
                 </TableCell>
               </TableRow>
@@ -195,7 +202,9 @@ export function StudentsPage() {
                       </Link>
                     )}
                   </TableCell>
-                  <TableCell>{studentId(student)}</TableCell>
+                  {user?.role === "PARENT" ? null : (
+                    <TableCell>{studentId(student)}</TableCell>
+                  )}
                   <TableCell>
                     <div className="flex flex-col items-start gap-1">
                       <span>{classText(student)}</span>

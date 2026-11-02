@@ -31,13 +31,23 @@ export function directoryForGuardian(directory, guardianId) {
       .filter((link) => link.guardianId === guardianId)
       .map((link) => link.studentId)
   )
-  const links = directory.links.filter((link) => studentIds.has(link.studentId))
-  const guardianIds = new Set(links.map((link) => link.guardianId))
   return {
-    students: directory.students.filter((student) => studentIds.has(student.id)),
-    guardians: directory.guardians.filter((guardian) =>
-      guardianIds.has(guardian.id)
-    ),
-    links,
+    students: directory.students
+      .filter((student) => studentIds.has(student.id))
+      .map(publicStudentForParent),
+    guardians: [],
+    links: [],
+  }
+}
+
+/** Fields parents need for My Kids / gate — no school number or SIS extras. */
+export function publicStudentForParent(student) {
+  return {
+    id: student.id,
+    givenName: student.givenName,
+    middleName: student.middleName ?? null,
+    surname: student.surname,
+    classLabel: student.classLabel ?? null,
+    yearGroup: student.yearGroup ?? null,
   }
 }

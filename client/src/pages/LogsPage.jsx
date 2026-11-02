@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { CalendarIcon, Check, ChevronRight, LogIn, LogOut, X } from "lucide-react"
+import { CalendarIcon, Check, LogIn, LogOut, X } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
@@ -157,26 +157,28 @@ export function LogsPage({ view = "today" }) {
         <p className="text-sm text-destructive">{errorMessage(pageError)}</p>
       ) : null}
       {view === "waiting" ? (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-3">
           <Link
             to="/log-dropoff"
-            className="ios-action-card flex h-16 items-center gap-4 rounded-[12px] px-4"
+            className="ios-action-card flex min-h-28 flex-col items-center justify-center gap-2 rounded-[12px] px-3 py-4 text-center"
           >
             <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f6c9a4] text-[#8c4314]">
               <LogIn className="size-5" />
             </span>
-            <span className="min-w-0 flex-1 font-semibold">Log drop off</span>
-            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+            <span className="text-sm font-semibold leading-tight">
+              Log drop off
+            </span>
           </Link>
           <Link
             to="/log-pickup"
-            className="ios-action-card flex h-16 items-center gap-4 rounded-[12px] px-4"
+            className="ios-action-card flex min-h-28 flex-col items-center justify-center gap-2 rounded-[12px] px-3 py-4 text-center"
           >
             <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#c5dff3] text-[#145a86]">
               <LogOut className="size-5" />
             </span>
-            <span className="min-w-0 flex-1 font-semibold">Log pick up</span>
-            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+            <span className="text-sm font-semibold leading-tight">
+              Log pick up
+            </span>
           </Link>
         </div>
       ) : null}

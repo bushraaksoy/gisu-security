@@ -10,17 +10,22 @@ export function SettingsPage() {
   return (
     <div className="flex max-w-md flex-col gap-4">
       <div className="ios-list text-sm">
-        <div className="ios-row">
-          <p className="text-xs text-muted-foreground">Signed in as</p>
-          <p className="font-medium">{user.name}</p>
-          <p className="text-xs text-muted-foreground">{user.username}</p>
-          {user.email &&
-          user.email.toLowerCase() !== user.username.toLowerCase() ? (
-            <p className="text-xs text-muted-foreground">{user.email}</p>
-          ) : null}
-        </div>
-      </div>
-      <div className="ios-list text-sm">
+        <Link
+          to="/settings/profile"
+          className="ios-row flex min-h-11 items-center justify-between font-medium"
+        >
+          Profile
+          <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+        </Link>
+        {user.role === "PARENT" ? (
+          <Link
+            to="/settings/assign"
+            className="ios-row flex min-h-11 items-center justify-between font-medium"
+          >
+            Assign pickup/dropoff person
+            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+          </Link>
+        ) : null}
         <Link
           to="/settings/password"
           className="ios-row flex min-h-11 items-center justify-between font-medium"

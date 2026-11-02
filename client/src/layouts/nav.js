@@ -1,5 +1,4 @@
 import {
-  CircleUser,
   ClipboardList,
   Contact,
   DoorOpen,
@@ -67,13 +66,7 @@ export const primaryTabs = [
     to: "/settings",
     label: "Settings",
     icon: Settings,
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/profile",
-    label: "Profile",
-    icon: CircleUser,
-    roles: ["PARENT", "SUPERADMIN", "SECURITY"],
+    roles: ["ADMIN", "PARENT", "SUPERADMIN", "SECURITY"],
   },
 ]
 export function tabsForRole(role) {
