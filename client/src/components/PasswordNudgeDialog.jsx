@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dialog"
 import { useAuth } from "@/lib/auth"
 const dismissKey = "password-nudge-dismissed"
-function accountPath(role) {
-  return role === "ADMIN" ? "/settings" : "/profile"
+function passwordPath(role) {
+  return role === "ADMIN" ? "/settings/password" : "/profile/password"
 }
 export function PasswordNudgeDialog() {
   const { user } = useAuth()
@@ -36,7 +36,7 @@ export function PasswordNudgeDialog() {
   function goChange() {
     sessionStorage.setItem(dismissKey, "1")
     setOpen(false)
-    navigate(accountPath(user.role))
+    navigate(passwordPath(user.role))
   }
   if (!user || user.role === "DISPLAY") {
     return null
@@ -58,9 +58,8 @@ export function PasswordNudgeDialog() {
           <DialogTitle>Update your password</DialogTitle>
           <DialogDescription>
             You&apos;re still using the password that was set for your account.
-            For security, go to{" "}
-            {user.role === "ADMIN" ? "Settings" : "Profile"} and choose a new
-            password.
+            For security, open Change password under{" "}
+            {user.role === "ADMIN" ? "Settings" : "Profile"} and pick a new one.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-2">

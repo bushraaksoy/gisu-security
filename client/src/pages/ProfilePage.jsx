@@ -1,6 +1,5 @@
 import { ChevronRight } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
-import { ChangePasswordForm } from "@/components/ChangePasswordForm"
 import { roleLabels } from "@/lib/models"
 import { useAuth } from "@/lib/auth"
 const fields = [
@@ -34,16 +33,24 @@ export function ProfilePage() {
             </div>
           ))}
       </div>
-      {user.role === "PARENT" ? (
+      <div className="ios-list text-sm">
+        {user.role === "PARENT" ? (
+          <Link
+            to="/profile/assign"
+            className="ios-row flex min-h-11 items-center justify-between font-medium"
+          >
+            Assign pickup/dropoff person
+            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
+          </Link>
+        ) : null}
         <Link
-          to="/profile/assign"
-          className="ios-list flex h-14 items-center justify-between px-4 text-left text-sm font-medium"
+          to="/profile/password"
+          className="ios-row flex min-h-11 items-center justify-between font-medium"
         >
-          Assign pickup/dropoff person
+          Change password
           <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
         </Link>
-      ) : null}
-      <ChangePasswordForm />
+      </div>
       <button
         type="button"
         className="ios-list flex h-11 w-full items-center justify-center text-sm font-medium text-destructive"

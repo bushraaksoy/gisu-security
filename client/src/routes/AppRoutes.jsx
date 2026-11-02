@@ -15,6 +15,7 @@ import {
   LogsPage,
   PickedUpPage,
   PickupBoardPage,
+  ChangePasswordPage,
   ProfilePage,
   SecurityRecordPage,
   SettingsPage,
@@ -192,10 +193,26 @@ export function AppRoutes() {
                 }
               />
               <Route
+                path="profile/password"
+                element={
+                  <RequireRole roles={["PARENT", "SUPERADMIN", "SECURITY"]}>
+                    <ChangePasswordPage />
+                  </RequireRole>
+                }
+              />
+              <Route
                 path="settings"
                 element={
                   <RequireRole roles={["ADMIN"]}>
                     <SettingsPage />
+                  </RequireRole>
+                }
+              />
+              <Route
+                path="settings/password"
+                element={
+                  <RequireRole roles={["ADMIN"]}>
+                    <ChangePasswordPage />
                   </RequireRole>
                 }
               />
