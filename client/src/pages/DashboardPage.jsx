@@ -59,7 +59,7 @@ export function DashboardPage() {
           <Link
             key={card.key}
             to={card.to}
-            className={`relative block rounded-2xl px-6 py-8 ${card.wrap}`}
+            className={`relative block rounded-2xl border border-black/[0.08] px-6 py-8 ${card.wrap}`}
           >
             <ChevronRight
               className={`absolute top-6 right-5 size-5 ${card.muted}`}
