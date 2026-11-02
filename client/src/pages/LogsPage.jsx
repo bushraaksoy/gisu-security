@@ -160,25 +160,17 @@ export function LogsPage({ view = "today" }) {
         <div className="grid grid-cols-2 gap-3">
           <Link
             to="/log-dropoff"
-            className="ios-action-card flex min-h-28 flex-col items-center justify-center gap-2 rounded-[12px] px-3 py-4 text-center"
+            className="ios-action-card flex h-12 items-center justify-center gap-2 rounded-[12px] px-3 text-sm font-medium"
           >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f6c9a4] text-[#8c4314]">
-              <LogIn className="size-5" />
-            </span>
-            <span className="text-sm font-semibold leading-tight">
-              Log drop off
-            </span>
+            <LogIn className="size-4 shrink-0" />
+            Log drop off
           </Link>
           <Link
             to="/log-pickup"
-            className="ios-action-card flex min-h-28 flex-col items-center justify-center gap-2 rounded-[12px] px-3 py-4 text-center"
+            className="ios-action-card flex h-12 items-center justify-center gap-2 rounded-[12px] px-3 text-sm font-medium"
           >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#c5dff3] text-[#145a86]">
-              <LogOut className="size-5" />
-            </span>
-            <span className="text-sm font-semibold leading-tight">
-              Log pick up
-            </span>
+            <LogOut className="size-4 shrink-0" />
+            Log pick up
           </Link>
         </div>
       ) : null}
