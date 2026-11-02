@@ -8,7 +8,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="ios-tabbar fixed inset-x-0 bottom-0 z-40 md:hidden"
+      className="ios-tabbar z-40 shrink-0 md:hidden"
     >
       <div className="flex pb-[env(safe-area-inset-bottom,0px)]">
         {tabs.map((tab) => (

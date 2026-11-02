@@ -17,60 +17,60 @@ export function RootLayout() {
     navigate("/login")
   }
   return (
-    <div className="ios-canvas flex h-dvh overflow-hidden text-foreground">
+    <div className="ios-canvas flex h-dvh flex-col overflow-hidden text-foreground">
       {!isDisplay ? <PasswordNudgeDialog /> : null}
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
-      {!isDisplay ? (
-        <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
-          <div className="px-4 py-5">
-            <img
-              src={logo}
-              alt="Galaxy International School Uganda"
-              className="h-auto w-full"
-            />
-          </div>
-          <nav className="flex flex-col gap-1 px-3">
-            {tabs.map((tab) => (
-              <NavLink
-                key={tab.to}
-                to={tab.to}
-                className={({ isActive }) =>
-                  cn(
-                    "flex min-h-11 items-center gap-2 rounded-md px-3 text-sm",
-                    isActive
-                      ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                      : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  )
-                }
+      <div className="flex min-h-0 flex-1">
+        {!isDisplay ? (
+          <aside className="hidden h-full w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+            <div className="px-4 py-5">
+              <img
+                src={logo}
+                alt="Galaxy International School Uganda"
+                className="h-auto w-full"
+              />
+            </div>
+            <nav className="flex flex-col gap-1 px-3">
+              {tabs.map((tab) => (
+                <NavLink
+                  key={tab.to}
+                  to={tab.to}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex min-h-11 items-center gap-2 rounded-md px-3 text-sm",
+                      isActive
+                        ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+                        : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    )
+                  }
+                >
+                  <tab.icon className="size-4" />
+                  {tab.label}
+                </NavLink>
+              ))}
+            </nav>
+            {user?.role === "SECURITY" ? (
+              <button
+                type="button"
+                className="mt-auto flex min-h-11 items-center px-6 text-sm text-muted-foreground hover:text-foreground"
+                onClick={handleSignOut}
               >
-                <tab.icon className="size-4" />
-                {tab.label}
-              </NavLink>
-            ))}
-          </nav>
-          {user?.role === "SECURITY" ? (
-            <button
-              type="button"
-              className="mt-auto flex min-h-11 items-center px-6 text-sm text-muted-foreground hover:text-foreground"
-              onClick={handleSignOut}
-            >
-              Sign out
-            </button>
-          ) : null}
-        </aside>
-      ) : null}
-      <div className="ios-canvas flex min-w-0 flex-1 flex-col">
-        {!isDisplay ? <TopBar /> : null}
-        <main
-          className={cn(
-            "min-h-0 flex-1 overflow-y-auto",
-            isDisplay
-              ? "p-4 md:p-6"
-              : "p-4 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:p-6 md:pb-6"
-          )}
-        >
-          <Outlet />
-        </main>
+                Sign out
+              </button>
+            ) : null}
+          </aside>
+        ) : null}
+        <div className="ios-canvas flex min-h-0 min-w-0 flex-1 flex-col">
+          {!isDisplay ? <TopBar /> : null}
+          <main
+            className={cn(
+              "min-h-0 flex-1 overflow-y-auto",
+              isDisplay ? "p-4 md:p-6" : "p-4 md:p-6"
+            )}
+          >
+            <Outlet />
+          </main>
+        </div>
       </div>
       {!isDisplay ? <BottomNav /> : null}
     </div>
