@@ -8,7 +8,7 @@
   --ios-tint-soft: color-mix(in srgb, #108040 14%, white);
   --ios-label-secondary: rgba(60, 60, 67, 0.6);
   --ios-fill: rgba(120, 120, 128, 0.12);
-  --ios-bar: rgba(255, 255, 255, 0.72);
+  --ios-bar: color-mix(in srgb, var(--ios-bg) 78%, transparent);
   --primary: var(--ios-tint);
   --primary-foreground: #ffffff;
   --ring: color-mix(in srgb, #108040 45%, white);

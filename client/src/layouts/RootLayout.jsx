@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import logo from "@/assets/galaxy_logo.png"
+import { PasswordNudgeDialog } from "@/components/PasswordNudgeDialog"
 import { BottomNav } from "@/layouts/BottomNav"
 import { GateAlerts } from "@/layouts/GateAlerts"
 import { tabsForRole } from "@/layouts/nav"
@@ -17,6 +18,7 @@ export function RootLayout() {
   }
   return (
     <div className="ios-canvas flex h-dvh overflow-hidden text-foreground">
+      {!isDisplay ? <PasswordNudgeDialog /> : null}
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
       {!isDisplay ? (
         <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">

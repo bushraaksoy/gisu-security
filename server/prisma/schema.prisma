@@ -38,9 +38,10 @@ model User {
   name         String
   username     String    @unique
   email        String?   @unique
-  passwordHash String
-  role         Role
-  guardianId   String?   @unique
+  passwordHash       String
+  mustChangePassword Boolean  @default(false)
+  role               Role
+  guardianId         String?  @unique
   students     Student[]
   gateLogs     GateLog[] @relation("GateLogParent")
   reviewedLogs GateLog[] @relation("GateLogReviewer")

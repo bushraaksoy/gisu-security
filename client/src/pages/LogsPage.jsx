@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { CalendarIcon, Check, LogIn, LogOut, X } from "lucide-react"
+import { CalendarIcon, Check, ChevronRight, LogIn, LogOut, X } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
@@ -160,21 +160,23 @@ export function LogsPage({ view = "today" }) {
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Link
             to="/log-dropoff"
-            className="flex h-16 items-center gap-4 rounded-2xl bg-background px-4 shadow-md"
+            className="ios-action-card flex h-16 items-center gap-4 rounded-[12px] px-4"
           >
             <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f6c9a4] text-[#8c4314]">
               <LogIn className="size-5" />
             </span>
-            <span className="font-semibold">Log drop off</span>
+            <span className="min-w-0 flex-1 font-semibold">Log drop off</span>
+            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
           </Link>
           <Link
             to="/log-pickup"
-            className="flex h-16 items-center gap-4 rounded-2xl bg-background px-4 shadow-md"
+            className="ios-action-card flex h-16 items-center gap-4 rounded-[12px] px-4"
           >
             <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#c5dff3] text-[#145a86]">
               <LogOut className="size-5" />
             </span>
-            <span className="font-semibold">Log pick up</span>
+            <span className="min-w-0 flex-1 font-semibold">Log pick up</span>
+            <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
           </Link>
         </div>
       ) : null}
@@ -184,7 +186,11 @@ export function LogsPage({ view = "today" }) {
           {logsQuery.isPending ? (
             <p className="text-sm text-muted-foreground">Loading logs…</p>
           ) : pending.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nothing waiting.</p>
+            <div className="ios-list">
+              <p className="ios-row text-sm text-[color:var(--ios-label-secondary)]">
+                Nothing waiting.
+              </p>
+            </div>
           ) : (
             pending.map((visit) => (
               <VisitCard

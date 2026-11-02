@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
+import { ChangePasswordForm } from "@/components/ChangePasswordForm"
 import { roleLabels } from "@/lib/models"
 import { useAuth } from "@/lib/auth"
 const fields = [
@@ -23,39 +23,37 @@ export function ProfilePage() {
   }
   return (
     <div className="flex max-w-md flex-col gap-4">
-      <article className="rounded-2xl bg-background px-5 text-sm">
+      <div className="ios-list text-sm">
         {fields
           .map(([label, value]) => [label, value(user)])
           .filter(([, value]) => value)
-          .map(([label, value], index) => (
-            <div
-              key={label}
-              className={index === 0 ? "py-3" : "border-t border-border py-3"}
-            >
+          .map(([label, value]) => (
+            <div key={label} className="ios-row">
               <p className="text-xs text-muted-foreground">{label}</p>
               <p className="font-medium">{value}</p>
             </div>
           ))}
-      </article>
+      </div>
       {user.role === "PARENT" ? (
         <Link
           to="/profile/assign"
-          className="flex h-14 items-center justify-between rounded-2xl bg-background px-5 text-left text-sm font-medium"
+          className="ios-list flex h-14 items-center justify-between px-4 text-left text-sm font-medium"
         >
           Assign pickup/dropoff person
-          <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+          <ChevronRight className="size-5 shrink-0 text-[color:var(--ios-label-secondary)]" />
         </Link>
       ) : null}
-      <Button
-        variant="outline"
-        className="h-11 bg-background"
+      <ChangePasswordForm />
+      <button
+        type="button"
+        className="ios-list flex h-11 w-full items-center justify-center text-sm font-medium text-destructive"
         onClick={() => {
           signOut()
           navigate("/login")
         }}
       >
         Sign out
-      </Button>
+      </button>
     </div>
   )
 }

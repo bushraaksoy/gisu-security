@@ -146,40 +146,42 @@ export function HomePage() {
       ) : children.length > 0 ? (
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-medium">Today</h2>
-          {children.map((child) => {
-            const status = gateStates[child.state]
-            const Icon = status?.icon
-            return (
-              <article
-                key={child.id}
-                className="relative flex items-center gap-3 overflow-hidden rounded-2xl bg-background px-4 py-3"
-              >
-                {celebrating.has(child.id) ? (
-                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/70">
-                    <span className="animate-gate-check flex size-16 items-center justify-center rounded-full bg-emerald-600 text-white">
-                      <Check className="size-8" />
+          <div className="ios-list">
+            {children.map((child) => {
+              const status = gateStates[child.state]
+              const Icon = status?.icon
+              return (
+                <article
+                  key={child.id}
+                  className="ios-row relative flex items-center gap-3 overflow-hidden"
+                >
+                  {celebrating.has(child.id) ? (
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/70">
+                      <span className="animate-gate-check flex size-16 items-center justify-center rounded-full bg-emerald-600 text-white">
+                        <Check className="size-8" />
+                      </span>
                     </span>
-                  </span>
-                ) : null}
-                {Icon ? (
-                  <span
-                    className={`flex size-10 shrink-0 items-center justify-center rounded-full ${status.iconWrap}`}
-                  >
-                    <Icon className="size-5" />
-                  </span>
-                ) : null}
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold">{child.name}</p>
-                  {child.classLabel ? (
-                    <p className="text-[11px] text-muted-foreground">
-                      {child.classLabel}
-                    </p>
                   ) : null}
-                </div>
-                <StatusBadge state={child.state} />
-              </article>
-            )
-          })}
+                  {Icon ? (
+                    <span
+                      className={`flex size-10 shrink-0 items-center justify-center rounded-full ${status.iconWrap}`}
+                    >
+                      <Icon className="size-5" />
+                    </span>
+                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold">{child.name}</p>
+                    {child.classLabel ? (
+                      <p className="text-[11px] text-muted-foreground">
+                        {child.classLabel}
+                      </p>
+                    ) : null}
+                  </div>
+                  <StatusBadge state={child.state} />
+                </article>
+              )
+            })}
+          </div>
         </div>
       ) : null}
     </div>
