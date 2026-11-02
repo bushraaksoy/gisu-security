@@ -1,19 +1,16 @@
 import { NavLink } from "react-router-dom"
 import { tabsForRole } from "@/layouts/nav"
 import { useAuth } from "@/lib/auth"
-import { useVisualViewportBottom } from "@/lib/useVisualViewportBottom"
 import { cn } from "@/lib/utils"
 export function BottomNav() {
   const { user } = useAuth()
   const tabs = tabsForRole(user?.role)
-  useVisualViewportBottom()
   return (
     <nav
       aria-label="Primary"
-      className="ios-tabbar fixed inset-x-0 z-40 md:hidden"
-      style={{ bottom: "var(--vv-bottom, 0px)" }}
+      className="ios-tabbar fixed inset-x-0 bottom-0 z-40 md:hidden"
     >
-      <div className="flex pb-[var(--ios-safe-bottom)]">
+      <div className="flex pb-[env(safe-area-inset-bottom,0px)]">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}

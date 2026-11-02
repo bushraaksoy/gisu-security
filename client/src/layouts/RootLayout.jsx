@@ -17,11 +17,11 @@ export function RootLayout() {
     navigate("/login")
   }
   return (
-    <div className="ios-canvas flex h-svh overflow-hidden text-foreground">
+    <div className="ios-canvas flex h-dvh overflow-hidden text-foreground">
       {!isDisplay ? <PasswordNudgeDialog /> : null}
       {user?.role === "SECURITY" ? <GateAlerts /> : null}
       {!isDisplay ? (
-        <aside className="hidden h-svh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+        <aside className="hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
           <div className="px-4 py-5">
             <img
               src={logo}
@@ -66,7 +66,7 @@ export function RootLayout() {
             "min-h-0 flex-1 overflow-y-auto",
             isDisplay
               ? "p-4 md:p-6"
-              : "p-4 pb-[calc(5.5rem+var(--ios-safe-bottom))] md:p-6 md:pb-6"
+              : "p-4 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:p-6 md:pb-6"
           )}
         >
           <Outlet />
