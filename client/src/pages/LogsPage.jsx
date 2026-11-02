@@ -157,17 +157,17 @@ export function LogsPage({ view = "today" }) {
         <p className="text-sm text-destructive">{errorMessage(pageError)}</p>
       ) : null}
       {view === "waiting" ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-3">
           <Link
             to="/log-dropoff"
-            className="ios-action-card flex h-12 items-center justify-center gap-2 rounded-[12px] px-3 text-sm font-medium"
+            className="ios-action-card flex h-12 items-center gap-2 rounded-[12px] px-4 text-sm font-medium"
           >
             <LogIn className="size-4 shrink-0" />
             Log drop off
           </Link>
           <Link
             to="/log-pickup"
-            className="ios-action-card flex h-12 items-center justify-center gap-2 rounded-[12px] px-3 text-sm font-medium"
+            className="ios-action-card flex h-12 items-center gap-2 rounded-[12px] px-4 text-sm font-medium"
           >
             <LogOut className="size-4 shrink-0" />
             Log pick up

@@ -9,6 +9,8 @@
   --ios-label-secondary: rgba(60, 60, 67, 0.6);
   --ios-fill: rgba(120, 120, 128, 0.12);
   --ios-bar: color-mix(in srgb, var(--ios-bg) 78%, transparent);
+  --ios-safe-bottom: min(env(safe-area-inset-bottom, 0px), 34px);
+  --vv-bottom: 0px;
   --primary: var(--ios-tint);
   --primary-foreground: #ffffff;
   --ring: color-mix(in srgb, #108040 45%, white);
