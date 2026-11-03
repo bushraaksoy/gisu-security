@@ -8,7 +8,7 @@
   --ios-tint-soft: color-mix(in srgb, #108040 14%, white);
   --ios-label-secondary: rgba(60, 60, 67, 0.6);
   --ios-fill: rgba(120, 120, 128, 0.12);
-  --ios-bar: color-mix(in srgb, var(--ios-bg) 78%, transparent);
+  --ios-bar: #ffffff;
   --primary: var(--ios-tint);
   --primary-foreground: #ffffff;
   --ring: color-mix(in srgb, #108040 45%, white);
@@ -45,23 +45,7 @@
 
 .ios-topbar {
   background-color: var(--ios-bar);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 0.5px solid var(--ios-separator);
-}
-
-.ios-tabbar {
-  background-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: saturate(180%) blur(28px);
-  -webkit-backdrop-filter: saturate(180%) blur(28px);
-  border-top: 0.5px solid rgba(255, 255, 255, 0.65);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 -0.5px 0 rgba(60, 60, 67, 0.12);
-}
-
-.ios-tab-active {
-  color: var(--ios-tint);
 }
 
 .ios-list {
