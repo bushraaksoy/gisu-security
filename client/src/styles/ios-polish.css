@@ -44,8 +44,8 @@
 }
 
 .ios-topbar {
-  background-color: var(--ios-bar);
-  border-bottom: 0.5px solid var(--ios-separator);
+  background-color: transparent;
+  border-bottom: none;
 }
 
 .ios-list {

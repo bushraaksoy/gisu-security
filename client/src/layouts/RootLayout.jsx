@@ -66,7 +66,7 @@ export function RootLayout() {
             "min-h-0 flex-1 overflow-y-scroll",
             isDisplay
               ? "p-4 md:p-6"
-              : "mt-[calc(3.5rem+env(safe-area-inset-top,0px))] p-4 pb-36 md:mt-0 md:p-6 md:pb-6"
+              : "mt-[calc(4.25rem+env(safe-area-inset-top,0px))] p-4 pb-28 md:mt-0 md:p-6 md:pb-6"
           )}
         >
           <Outlet />
