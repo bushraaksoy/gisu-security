@@ -13,7 +13,7 @@ export function DataTable({ header, children }) {
 }
 
 export function RecordCards({ children }) {
-  return <div className="ios-list md:hidden">{children}</div>
+  return <div className="ios-list flex flex-col md:hidden">{children}</div>
 }
 
 export function RecordCard({ children, className, ...props }) {

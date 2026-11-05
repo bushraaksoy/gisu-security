@@ -356,6 +356,7 @@ export const listAllowed = async (req, res) => {
       id: item.student.id,
       name: studentName(item.student),
       classLabel: classLabel(item.student),
+      imageUrl: item.student.imageUrl || null,
       canDropoff: item.canDropoff,
       canPickup: item.canPickup,
     }))
@@ -637,6 +638,10 @@ export const present = async (_req, res) => {
       orderBy: { occurredAt: "desc" },
     }),
   ]);
+  const byId = new Map(directory.students.map((student) => [student.id, student]));
+  function photo(id) {
+    return byId.get(id)?.imageUrl || null;
+  }
   const arrivedIds = new Set();
   const presentStudents = [];
   for (const log of dropoffs) {
@@ -654,6 +659,7 @@ export const present = async (_req, res) => {
       id: log.sisStudentId,
       name: log.studentName,
       classLabel: log.classLabel,
+      imageUrl: photo(log.sisStudentId),
     });
   }
   presentStudents.sort((a, b) => a.name.localeCompare(b.name));
@@ -668,6 +674,7 @@ export const present = async (_req, res) => {
       id: log.sisStudentId,
       name: log.studentName,
       classLabel: log.classLabel,
+      imageUrl: photo(log.sisStudentId),
     });
   }
   pickedUpStudents.sort((a, b) => a.name.localeCompare(b.name));
@@ -677,6 +684,7 @@ export const present = async (_req, res) => {
       id: student.id,
       name: studentName(student),
       classLabel: classLabel(student),
+      imageUrl: student.imageUrl || null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
   res.json({

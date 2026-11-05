@@ -92,7 +92,11 @@ export function DayListPage({ list }) {
               {students.map((student) => (
                 <RecordCard key={student.id}>
                   <div className="flex items-center gap-3">
-                    <StudentAvatar id={student.id} name={student.name} />
+                    <StudentAvatar
+                      id={student.id}
+                      name={student.name}
+                      imageUrl={student.imageUrl}
+                    />
                     <p className="min-w-0 flex-1 font-semibold">
                       {student.name}
                     </p>
@@ -129,7 +133,8 @@ export function DayListPage({ list }) {
                       <StudentAvatar
                         id={student.id}
                         name={student.name}
-                        className="size-7 text-[10px]"
+                        imageUrl={student.imageUrl}
+                        className="size-8 text-[10px]"
                       />
                       {student.name}
                     </span>

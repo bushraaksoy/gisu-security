@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 const palette = [
   { bg: "#efe6f8", ink: "#6b4f8a" },
@@ -30,20 +31,61 @@ export function StudentAvatar({
   givenName,
   surname,
   name,
+  imageUrl,
   className,
 }) {
   const color = colorFor(id || name)
   const initials = initialsFor({ givenName, surname, name })
+  const src = typeof imageUrl === "string" ? imageUrl.trim() : ""
+  const imageRef = useRef(null)
+  const [loaded, setLoaded] = useState(false)
+  const [failed, setFailed] = useState(false)
+  function noteImage(image) {
+    if (!image?.complete) {
+      return
+    }
+    if (image.naturalWidth > 0) {
+      setLoaded(true)
+      return
+    }
+    setFailed(true)
+  }
+  useEffect(() => {
+    setLoaded(false)
+    setFailed(false)
+    noteImage(imageRef.current)
+  }, [src])
+  const showImage = Boolean(src) && loaded && !failed
   return (
     <span
       className={cn(
-        "inline-flex size-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+        "inline-flex size-12 shrink-0 rounded-full bg-[#e8e8ec] p-px shadow-[0_0_0_2px_#fff,0_0_0_3px_#d4d4d8]",
         className
       )}
-      style={{ backgroundColor: color.bg, color: color.ink }}
       aria-hidden="true"
     >
-      {initials}
+      <span
+        className="relative flex size-full items-center justify-center overflow-hidden rounded-full text-sm font-semibold"
+        style={{ backgroundColor: color.bg, color: color.ink }}
+      >
+        {initials}
+        {src && !failed ? (
+          <img
+            ref={(node) => {
+              imageRef.current = node
+              noteImage(node)
+            }}
+            src={src}
+            alt=""
+            className={cn(
+              "absolute inset-0 size-full object-cover",
+              showImage ? "opacity-100" : "opacity-0"
+            )}
+            onLoad={(event) => noteImage(event.currentTarget)}
+            onError={() => setFailed(true)}
+          />
+        ) : null}
+      </span>
     </span>
   )
 }

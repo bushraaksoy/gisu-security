@@ -49,5 +49,6 @@ export function publicStudentForParent(student) {
     surname: student.surname,
     classLabel: student.classLabel ?? null,
     yearGroup: student.yearGroup ?? null,
+    imageUrl: student.imageUrl || null,
   }
 }

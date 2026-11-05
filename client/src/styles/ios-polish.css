@@ -49,9 +49,6 @@
 }
 
 .ios-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
   overflow: hidden;
   border-radius: 12px;
   background-color: var(--ios-surface);

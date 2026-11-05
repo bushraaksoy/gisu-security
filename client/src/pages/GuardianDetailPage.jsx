@@ -54,6 +54,7 @@ export function GuardianDetailPage() {
                         id={student.id}
                         givenName={student.givenName}
                         surname={student.surname}
+                        imageUrl={student.imageUrl}
                       />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold">{directoryName(student)}</p>
@@ -95,7 +96,8 @@ export function GuardianDetailPage() {
                           id={student.id}
                           givenName={student.givenName}
                           surname={student.surname}
-                          className="size-7 text-[10px]"
+                          imageUrl={student.imageUrl}
+                          className="size-8 text-[10px]"
                         />
                         {directoryName(student)}
                       </span>

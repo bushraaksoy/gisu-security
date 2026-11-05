@@ -116,6 +116,7 @@ export function StudentsPage() {
                       id={student.id}
                       givenName={student.givenName}
                       surname={student.surname}
+                      imageUrl={student.imageUrl}
                     />
                     <div className="min-w-0 flex-1">
                       {user?.role === "PARENT" ? (
@@ -183,7 +184,8 @@ export function StudentsPage() {
                           id={student.id}
                           givenName={student.givenName}
                           surname={student.surname}
-                          className="size-7 text-[10px]"
+                          imageUrl={student.imageUrl}
+                          className="size-8 text-[10px]"
                         />
                         {directoryName(student)}
                       </span>
@@ -196,7 +198,8 @@ export function StudentsPage() {
                           id={student.id}
                           givenName={student.givenName}
                           surname={student.surname}
-                          className="size-7 text-[10px]"
+                          imageUrl={student.imageUrl}
+                          className="size-8 text-[10px]"
                         />
                         {directoryName(student)}
                       </Link>
@@ -227,7 +230,11 @@ export function StudentsPage() {
               <RecordCard key={student.id}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-3">
-                    <StudentAvatar id={student.id} name={student.name} />
+                    <StudentAvatar
+                      id={student.id}
+                      name={student.name}
+                      imageUrl={student.imageUrl}
+                    />
                     <div className="min-w-0">
                       <p className="font-medium">{student.name}</p>
                       <p className="text-xs text-muted-foreground">
@@ -258,7 +265,8 @@ export function StudentsPage() {
                     <StudentAvatar
                       id={student.id}
                       name={student.name}
-                      className="size-7 text-[10px]"
+                      imageUrl={student.imageUrl}
+                      className="size-8 text-[10px]"
                     />
                     {student.name}
                   </span>
